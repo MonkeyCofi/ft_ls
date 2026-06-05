@@ -11,7 +11,7 @@ Flags:
 Returns: 
 - 0 if everything is ok
 - 1 if there are minor problems (eg: cannot access a subdirectory)
-- 2 if there is a serious issue (eg: cannot access command-line arguments)
+- 2 if there is a serious issue (eg: cannot access directory listed as command line argument)
 
 Functions allowed:
 - write
@@ -22,7 +22,7 @@ Functions allowed:
 - lstat
 - getpwuid
 - getgrgid
-- listxattr
+- listxattr: 
 - getxattr
 - time
 - ctime
@@ -32,3 +32,6 @@ Functions allowed:
 - perror
 - strerror
 - exit
+
+## Resources
+- ["How does 'ls' work?"](https://medium.com/better-programming/how-does-ls-work-14fdc2b85308) by Sanil Khurana
