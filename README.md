@@ -35,3 +35,71 @@ Functions allowed:
 
 ## Resources
 - ["How does 'ls' work?"](https://medium.com/better-programming/how-does-ls-work-14fdc2b85308) by Sanil Khurana
+
+# Implementation stuff
+
+### Initialization
+Start by parsing the command line arguments to see if any optinos are given<br>
+
+If a '-' character is found, check the next character to see if it is a valid option. If a valid option is found, add it to some place keeping track of the options
+
+### The Command
+By default, the command sorts the directories by alphabetical order. However, this behaviour can be altered by the following flags: -r, -t
+
+The -r flag reverses the order of the sort. It also affects the -t flag
+
+The -t flag sorts by the latest time modified. The -r flag would sort it by the earliest time modified
+
+### -R option
+Recursively list every directory possible. This would recursively call opendir() for each directory up until the file is not a directory, in which case opendir would set errno as 20.<br>
+
+### -a option
+List all files prefixed with '.' (usually hidden files). By default, they will be sorted in alphabetical order
+
+### Functions used
+The details about every linux file is stored in an object called an inode (index node).
+
+The very basis of ls starts with the opendir() function. It opens the directory given as a parameter and returns a DIR pointer. This DIR struct represents the directory opened as a parameter to opendir().
+
+Each file in the directory can then be opened with readdir() which returns a dirent address. The struct's glibc implementation is defined as follows:
+``` C
+struct dirent
+{
+    ino_t          d_ino;       /* Inode number */
+    off_t          d_off;       /* Not an offset; see below */
+    unsigned short d_reclen;    /* Length of this record */
+    unsigned char  d_type;      /* Type of file; not supported
+                                    by all filesystem types */
+    char           d_name[256]; /* Null-terminated filename */
+};
+```
+This would be the laziest way to implement ls for the current directory is as follows:
+``` C
+int main()
+{
+    DIR *directory;
+    struct dirent *entry = NULL;
+
+    directory = opendir("./");  // open the current directory
+    if (directory == NULL)      // an error in opendir() call
+    {
+        perror("opendir");
+        return 1;
+    }
+    entry = readdir(directory)
+    while (entry)
+    {
+        printf("%s\n", entry->d_name);  // print the entry name
+        entry = readdir(directory);
+    }
+}
+```
+
+Obviously there should be a lot more to do, but this does print every file in the current directory (including the hidden ones)
+
+Try creating a quene that will store every dirent entry that is returned by readdir()<br>
+The entries in this queue can be sorted by either:
+- alphabetical order
+- time modified
+
+The queue's order will be head-first or rear-first depending on whether the -r flag is set
