@@ -57,19 +57,22 @@ int main(int ac, char **av)
 	entry_queue = create_queue();
 	if (!entry_queue)
 		return 1;
+	int i = 0;
 	while (entry)
 	{
-		if (entry->d_name[0] == '.')
-		{
-			entry = readdir(dirp);
-			continue ;
-		}
-		printf("%s\n", entry->d_name);
+		// if (entry->d_name[0] == '.')
+		// {
+		// 	entry = readdir(dirp);
+		// 	continue ;
+		// }
 		entry = readdir(dirp);
+		if (!entry)
+			break ;
+		printf("%d - %s\n", ++i, entry->d_name);
 		t_queue_node* node = create_queue_node(entry);
-
 		if (node)
-			add_to_front(entry_queue, node);
+			// add_to_front(entry_queue, node);
+			enqueue_back(entry_queue, node);
 	}
 	closedir(dirp);
 	free_queue(entry_queue);

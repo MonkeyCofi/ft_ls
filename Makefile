@@ -10,16 +10,23 @@ LIBFT_DIR = ./libft
 
 LIBFT = $(LIBFT_DIR)/libft.a
 
+all: $(NAME)
+
 $(LIBFT):
 	make -C $(LIBFT_DIR)
 
 $(NAME): $(LIBFT) $(SRCS)
-	$(CC) $(CFLAGS) $(SRCS) -L$(LIBFT_DIR) -lft -o $(NAME)
+	$(CC) $(CFLAGS) -g3 $(SRCS) -L$(LIBFT_DIR) -lft -o $(NAME)
 
-all: $(NAME)
 
 clean:
+	make -C $(LIBFT_DIR) clean
 	rm -f $(OBJS)
 
 fclean: clean
+	make -C $(LIBFT_DIR) fclean
 	rm -f $(NAME)
+
+re: fclean all
+
+.PHONY: all clean fclean re
