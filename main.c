@@ -1,41 +1,18 @@
-#include <stdio.h>
-#include <dirent.h>
-#include <errno.h>
-#include "queue.h"
-#include "structs.h"
-#include <unistd.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/08 18:05:41 by pipolint          #+#    #+#             */
+/*   Updated: 2026/06/08 18:05:42 by pipolint         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#define OPTIONS "lRart"
 
-/*
-	parse the command line arguments
-	check for a prefix - in every string. if present, check if it is one of the options
-*/
-void parse_cli(const char **av)
-{
-	int	i;
-	int	j;
+#include "ft_ls.h"
 
-	i = 0;
-	while (av[i])
-	{
-		j = 0;
-		if (av[i][0] == '-')
-		{
-			j += 1;
-			// check if the current character is any of the options
-			if (ft_strchr(OPTIONS, av[i][j]))
-			{
-				// add option
-			}
-		}
-	}
-}
-
-/*
-	if there are parameters given, list every file within the given parameters
-	else if there is no parameter given, list every file in the current directory
-*/
 int main(int ac, char **av)
 {
 	// parse_cli(av);
@@ -60,18 +37,12 @@ int main(int ac, char **av)
 	int i = 0;
 	while (entry)
 	{
-		// if (entry->d_name[0] == '.')
-		// {
-		// 	entry = readdir(dirp);
-		// 	continue ;
-		// }
 		entry = readdir(dirp);
 		if (!entry)
 			break ;
 		printf("%d - %s\n", ++i, entry->d_name);
 		t_queue_node* node = create_queue_node(entry);
 		if (node)
-			// add_to_front(entry_queue, node);
 			enqueue_back(entry_queue, node);
 	}
 	closedir(dirp);

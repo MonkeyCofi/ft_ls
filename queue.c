@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   queue.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/08 18:05:14 by pipolint          #+#    #+#             */
+/*   Updated: 2026/06/08 18:05:15 by pipolint         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "queue.h"
 
 /**
@@ -48,14 +60,6 @@ void	enqueue_back(t_queue *queue, t_queue_node *node)
 	node->prev = queue->rear;
 	queue->rear->next = node;
 	queue->rear = node;
-	/*
-		if the queue has a rear node:
-			set node->prev to queue->rear
-			set queue->rear to node
-		else if the queue does not have a rear node
-			set queue->rear to node
-			set queue->front to node
-	*/
 }
 
 /**
