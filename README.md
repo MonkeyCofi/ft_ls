@@ -118,4 +118,4 @@ Here is a sample file listed with the -l flag
 Here is a sample folder listed with the -l flag
 drwxr-xr-x 2 pipolint 2023_abu-dhabi   81 Jun 10 17:57 get_next_line
 
-the first column displays the permissions for the group, 
+the first column displays the permissions for the group, the second column displays the username of the owner of the file, 
