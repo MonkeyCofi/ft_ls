@@ -2,9 +2,17 @@ NAME = ft_ls
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBFT_DIR)
 
-SRCS := main.c queue.c
+INC_DIR = ./inc
+
+SRCS_DIR := ./srcs
+
+OBJS_DIR := ./objs
+
+SRCS := $(addprefix $(SRCS_DIR)/, queue.c main.c)
+
+OBJS := $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 
 LIBFT_DIR = ./libft
 
@@ -15,11 +23,14 @@ all: $(NAME)
 $(LIBFT):
 	make -C $(LIBFT_DIR)
 
-$(NAME): $(LIBFT) $(SRCS)
-	$(CC) $(CFLAGS) -g3 $(SRCS) -L$(LIBFT_DIR) -lft -o $(NAME)
+$(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
+	$(CC) $(CFLAGS) -c $^ -L$(LIBFT_DIR) -lft -o $@ 
 
+$(NAME): $(LIBFT) $(OBJS)
+	$(CC) $(CFLAGS) -g3 $(OBJS) -L$(LIBFT_DIR) -lft -o $(NAME)
 
 clean:
+	echo $(OBJS)
 	make -C $(LIBFT_DIR) clean
 	rm -f $(OBJS)
 

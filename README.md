@@ -103,3 +103,10 @@ The entries in this queue can be sorted by either:
 - time modified
 
 The queue's order will be head-first or rear-first depending on whether the -r flag is set
+
+### Different ways of storing the options
+Simplest way is to use an array of characters that represents each option
+There can be two preprocessor directives: OPTIONS and OPTION_COUNT. THis is so that when a new option is added, it is easier to refactor the code
+to take the new option into consideration
+
+Another option is to 

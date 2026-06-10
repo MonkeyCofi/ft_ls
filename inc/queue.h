@@ -6,16 +6,16 @@
 /*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:27 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/08 18:05:28 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/08 20:49:44 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef QUEUE_H
 # define QUEUE_H
 
+# include "libft.h"
 # include <stdbool.h>
 # include <stdlib.h>
-# include "./libft/libft.h"
 
 typedef struct s_queue_node
 {
