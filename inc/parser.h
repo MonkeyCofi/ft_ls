@@ -13,7 +13,7 @@
 #ifndef PARSER_H
 # define PARSER_H
 
-# include "ft_ls.h"
+typedef struct s_ls t_ls;
 
 void    parse_options(char *str, t_ls *ls);
 void    parse_cli(char **args, int arg_count, t_ls *ls);

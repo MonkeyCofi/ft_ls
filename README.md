@@ -104,9 +104,8 @@ The entries in this queue can be sorted by either:
 
 The queue's order will be head-first or rear-first depending on whether the -r flag is set
 
-### Different ways of storing the options
-Simplest way is to use an array of characters that represents each option
-There can be two preprocessor directives: OPTIONS and OPTION_COUNT. THis is so that when a new option is added, it is easier to refactor the code
-to take the new option into consideration
-
-Another option is to 
+### Priority
+As previously mentioned, there are 5 flags to check for: -l, -a, -r, -R, and -t<br>
+There is an order as to how these flags should be processed. The -t flag takes the highest priority, as that switches from sorting alphabetically to sorting by time<br>
+After that, the -r flag should be considered, which will reverse the order of the sorting. The rest of the flags don't really have a priority as they just change<br>
+the behaviour of the listing rather than the actual order of listing.
