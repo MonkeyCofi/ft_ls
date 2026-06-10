@@ -109,3 +109,13 @@ As previously mentioned, there are 5 flags to check for: -l, -a, -r, -R, and -t<
 There is an order as to how these flags should be processed. The -t flag takes the highest priority, as that switches from sorting alphabetically to sorting by time<br>
 After that, the -r flag should be considered, which will reverse the order of the sorting. The rest of the flags don't really have a priority as they just change<br>
 the behaviour of the listing rather than the actual order of listing.
+
+
+### ls display format with -l flag
+Here is a sample file listed with the -l flag
+-rw-r--r-- 1 pipolint 2023_abu-dhabi 1763 Jun 10 14:07 ft_atoi.c
+
+Here is a sample folder listed with the -l flag
+drwxr-xr-x 2 pipolint 2023_abu-dhabi   81 Jun 10 17:57 get_next_line
+
+the first column displays the permissions for the group, 
