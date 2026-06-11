@@ -36,14 +36,30 @@ void    parse_options(char *str, t_ls *ls)
 }
 
 /**
- * @brief mallocs and adds the directory string and adds it to the list of directories in the ls struct
- * @param directory The directory string to parse
+ * @brief mallocs and adds directories to ls->directories array
  * @param ls The ls struct that stores all program information
+ * @param args The command line arguments
+ * @param directory_indices An array of indices for args where each index represents a directory name
+ * @param directory_count The amount of entries in the directory_indices array
  * @return Nothing
 */
-void	add_directory(char *directory, t_ls *ls)
+void	add_directories(t_ls *ls, char **args, int *directory_indices, int directory_count)
 {
-	
+	int	i;
+
+	ls->directories = malloc(sizeof(char *) * (directory_count + 1));
+	if (ls->directories == NULL)
+	{
+		ls->exit_code = 2;
+		return ;
+	}
+	ls->directories[directory_count] = 0;
+	i = 0;
+	while (i < directory_count)
+	{
+		ls->directories[i] = ft_strdup(args[directory_indices[i]]);
+		i++;
+	}
 }
 
 
@@ -61,19 +77,23 @@ void    parse_cli(char **args, int arg_count, t_ls *ls)
 			set the option in the ls struct
 	*/
 	int i;
+	int	directories;
+	int	*directory_indices;
 	
-	i = 0;
+	i = 1;
+	directories = 0;
+	directory_indices = malloc(sizeof(int) * directories);
 	while (args[i])
 	{
 		if (ls->exit_code == 2)
-		{
 			return ;
-		}
 		if (args[i][0] == '-')
 			parse_options(args[i], ls);
 		else
-			add_directory(args[i], ls);
-		i += 1;
+			directory_indices[directories++] = i;
+		i++;
 	}
+	add_directories(ls, args, directory_indices, directories);
+	free(directory_indices);
 	(void)arg_count;
 }
