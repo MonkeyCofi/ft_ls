@@ -34,12 +34,14 @@ typedef enum s_options
 
 typedef struct s_ls
 {
-	t_queue		*entries;
-	size_t		option_count;
-	char		options[OPTION_COUNT + 1];
-	char		**directories;
-	int			exit_code;
-	int			error_code;
+	t_queue	*entries;
+	size_t	option_count;
+	char	options[OPTION_COUNT + 1];
+	char	**directories;
+	int		directory_count;
+	int		exit_code;
+	int		error_code;
+	DIR		**open_directories;
 }   t_ls;
 
 #endif

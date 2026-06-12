@@ -17,6 +17,6 @@ typedef struct s_ls t_ls;
 
 void    parse_options(char *str, t_ls *ls);
 void    parse_cli(char **args, int arg_count, t_ls *ls);
-void	add_directories(t_ls *ls, char **args, int *directory_indices, int directory_count);
+void	add_directories(t_ls *ls, char **args, int *directory_indices);
 
 #endif

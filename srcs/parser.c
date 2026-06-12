@@ -43,10 +43,12 @@ void    parse_options(char *str, t_ls *ls)
  * @param directory_count The amount of entries in the directory_indices array
  * @return Nothing
 */
-void	add_directories(t_ls *ls, char **args, int *directory_indices, int directory_count)
+void	add_directories(t_ls *ls, char **args, int *directory_indices)
 {
 	int	i;
+	int	directory_count;
 
+	directory_count = ls->directory_count;
 	ls->directories = malloc(sizeof(char *) * (directory_count + 1));
 	if (ls->directories == NULL)
 	{
@@ -77,12 +79,10 @@ void    parse_cli(char **args, int arg_count, t_ls *ls)
 			set the option in the ls struct
 	*/
 	int i;
-	int	directories;
 	int	*directory_indices;
 	
 	i = 1;
-	directories = 0;
-	directory_indices = malloc(sizeof(int) * directories);
+	directory_indices = malloc(sizeof(int) * arg_count);
 	while (args[i])
 	{
 		if (ls->exit_code == 2)
@@ -90,10 +90,10 @@ void    parse_cli(char **args, int arg_count, t_ls *ls)
 		if (args[i][0] == '-')
 			parse_options(args[i], ls);
 		else
-			directory_indices[directories++] = i;
+			directory_indices[ls->directory_count++] = i;
 		i++;
 	}
-	add_directories(ls, args, directory_indices, directories);
+	add_directories(ls, args, directory_indices);
 	free(directory_indices);
 	(void)arg_count;
 }

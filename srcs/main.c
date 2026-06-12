@@ -76,19 +76,27 @@ void	exec_ls(t_ls *ls)
 	// sort_entries(&ls);
 	// open the list of directories
 	int				i;
-	DIR				*dir;
-	t_queue_node	*add;
 
 	i = 0;
-	add = NULL;
+	ls->open_directories = malloc(sizeof(DIR *) * ls->directory_count);
 	while (ls->directories[i])
 	{
-		dir = opendir(ls->directories[i]);
-		add = create_queue_node((void *)dir);
-		enqueue_back(ls->entries, add);	// add the directory to the queue
+		ls->open_directories[i] = opendir(ls->directories[i]);
 		i++;
 	}
-	
+	i = 0;
+	while (i < ls->directory_count)
+	{
+		struct dirent* entry = readdir(ls->open_directories[i]);
+		ft_printf("%s:\n", ls->directories[i]);
+		while (entry != NULL)
+		{
+			ft_printf("%s  ", entry->d_name);
+			entry = readdir(ls->open_directories[i]);
+		}
+		ft_printf("\n");
+		i++;
+	}
 }
 
 int main(int ac, char **av)
