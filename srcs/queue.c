@@ -146,3 +146,35 @@ void	print_queue_back(t_queue *queue)
 	node_data = trav->data;
 	ft_printf("%s\n", node_data->d_name);
 }
+
+t_queue_node	*peek_front(t_queue *queue)
+{
+	return (queue->front);
+}
+
+t_queue_node	*peek_rear(t_queue *queue)
+{
+	return (queue->rear);
+}
+
+t_queue_node	*pop_front(t_queue* queue)
+{
+	t_queue_node	*front;
+
+	front = queue->front;
+	queue->front = front->next;
+	queue->front->prev = NULL;
+	return (front);
+}
+
+t_queue_node	*pop_back(t_queue *queue)
+{
+	t_queue_node	*rear;
+	t_queue_node	*rear_prev;
+
+	rear = queue->rear;
+	rear_prev = rear->prev;
+	queue->rear = rear_prev;
+	rear_prev->next = NULL;
+	return rear;
+}
