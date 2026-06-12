@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:41 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/09 20:57:38 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/11 23:15:44 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,25 @@
 // 	(void)av;
 // }
 
+void	sort_entries(t_ls *ls)
+{
+	char	*options;
+	bool	sort_by_time;
+
+	options = ls->options;
+	sort_by_time = ft_strchr(options, 't') != NULL;
+}
+
+void	exec_ls(t_ls *ls)
+{
+	sort_entries(&ls);
+}
+
 int main(int ac, char **av)
 {
 	t_ls	ls;
 
 	ft_memset(&ls, 0, sizeof(t_ls));
 	parse_cli(av, ac, &ls);
+	exec_ls(&ls);
 }
