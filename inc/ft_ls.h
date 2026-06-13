@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ls.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:24 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/09 18:05:05 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/13 23:34:22 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <stdio.h>
 # include "parser.h"
 # include "queue.h"
+# include "vector.h"
 
 typedef enum s_options
 {
@@ -35,13 +36,14 @@ typedef enum s_options
 typedef struct s_ls
 {
 	t_queue	*entries;
+	t_queue	*d_queue;
 	size_t	option_count;
 	char	options[OPTION_COUNT + 1];
 	char	**directories;
 	int		directory_count;
 	int		exit_code;
 	int		error_code;
-	DIR		**open_directories;
+	t_queue	*open_directories;
 }   t_ls;
 
 #endif

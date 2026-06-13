@@ -71,6 +71,33 @@ void	add_directories(t_ls *ls, char **args, int *directory_indices)
  * @param arg_count The count of the arguments
  * @return Nothing
 */
+// void    parse_cli(char **args, int arg_count, t_ls *ls)
+// {
+// 	/*
+// 		detect if "-" is present in every string
+// 		if detected, parse the option
+// 			set the option in the ls struct
+// 	*/
+// 	int i;
+// 	int	*directory_indices;
+	
+// 	i = 1;
+// 	directory_indices = malloc(sizeof(int) * arg_count);
+// 	while (args[i])
+// 	{
+// 		if (ls->exit_code == 2)
+// 			return ;
+// 		if (args[i][0] == '-')
+// 			parse_options(args[i], ls);
+// 		else
+// 			directory_indices[ls->directory_count++] = i;
+// 		i++;
+// 	}
+// 	add_directories(ls, args, directory_indices);
+// 	free(directory_indices);
+// 	(void)arg_count;
+// }
+
 void    parse_cli(char **args, int arg_count, t_ls *ls)
 {
 	/*
@@ -78,11 +105,11 @@ void    parse_cli(char **args, int arg_count, t_ls *ls)
 		if detected, parse the option
 			set the option in the ls struct
 	*/
-	int i;
-	int	*directory_indices;
+	int 			i;
+	t_queue_node	*new;
+	char			*dup_str;
 	
 	i = 1;
-	directory_indices = malloc(sizeof(int) * arg_count);
 	while (args[i])
 	{
 		if (ls->exit_code == 2)
@@ -90,10 +117,14 @@ void    parse_cli(char **args, int arg_count, t_ls *ls)
 		if (args[i][0] == '-')
 			parse_options(args[i], ls);
 		else
-			directory_indices[ls->directory_count++] = i;
+		{
+			dup_str = ft_strdup(args[i]);
+			new = create_queue_node(dup_str);
+			enqueue_back(ls->d_queue, new);
+		}
 		i++;
 	}
-	add_directories(ls, args, directory_indices);
-	free(directory_indices);
+	// add_directories(ls, args, directory_indices);
+	// free(directory_indices);
 	(void)arg_count;
 }

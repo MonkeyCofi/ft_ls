@@ -121,3 +121,6 @@ drwxr-xr-x 2 pipolint 2023_abu-dhabi   81 Jun 10 17:57 get_next_line
 the first column displays the permissions for the group, the second column displays the username of the owner of the file, 
 
 Currently, the queue is used to store DIR pointers to each directory passed as an argument
+
+Just found out that the directories passed as arguments should also follow the rules of listing
+

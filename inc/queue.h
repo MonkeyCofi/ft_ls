@@ -38,6 +38,11 @@ void			enqueue_back(t_queue *queue, t_queue_node *node);
 t_queue_node	*create_queue_node(void *data);
 void			free_queue(t_queue* queue);
 bool			is_empty(t_queue *queue);
+size_t			queue_size(t_queue *queue);
+t_queue_node	*peek_front(t_queue *queue);
+t_queue_node	*peek_rear(t_queue *queue);
+void			pop_front(t_queue* queue);
+void			pop_back(t_queue *queue);
 
 /* Helper functions */
 void			print_queue_front(t_queue *queue);

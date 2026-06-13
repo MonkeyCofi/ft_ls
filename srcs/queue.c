@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   queue.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:14 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/08 18:05:15 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/13 23:27:50 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,17 +157,16 @@ t_queue_node	*peek_rear(t_queue *queue)
 	return (queue->rear);
 }
 
-t_queue_node	*pop_front(t_queue* queue)
+void	pop_front(t_queue* queue)
 {
 	t_queue_node	*front;
 
 	front = queue->front;
 	queue->front = front->next;
 	queue->front->prev = NULL;
-	return (front);
 }
 
-t_queue_node	*pop_back(t_queue *queue)
+void	pop_back(t_queue *queue)
 {
 	t_queue_node	*rear;
 	t_queue_node	*rear_prev;
@@ -176,5 +175,9 @@ t_queue_node	*pop_back(t_queue *queue)
 	rear_prev = rear->prev;
 	queue->rear = rear_prev;
 	rear_prev->next = NULL;
-	return rear;
+}
+
+size_t	queue_size(t_queue *queue)
+{
+	return (queue->rear - queue->front);
 }
