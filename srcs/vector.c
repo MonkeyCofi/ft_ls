@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 21:05:03 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/13 23:47:35 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/14 15:32:49 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,4 +97,5 @@ void	add_to_vector(t_vector * vector, void *element, t_data_type data_type)
 		void	*new_data = malloc(vector->capacity * 2);
 		ft_memmove(new_data, vector->data, vector->capacity);
 	}
+	(void)element;
 }

@@ -2,7 +2,7 @@ NAME = ft_ls
 
 CC = gcc
 
-CFLAGS = -Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBFT_DIR)
+CFLAGS = -Wall -Wextra -Werror -I$(INC_DIR) -I$(LIBFT_DIR) -g3
 
 INC_DIR = ./inc
 
@@ -27,7 +27,7 @@ $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c
 	$(CC) $(CFLAGS) -c $^ -L$(LIBFT_DIR) -lft -o $@ 
 
 $(NAME): $(LIBFT) $(OBJS)
-	$(CC) $(CFLAGS) -g3 $(OBJS) -L$(LIBFT_DIR) -lft -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) -L$(LIBFT_DIR) -lft -o $(NAME)
 
 clean:
 	echo $(OBJS)

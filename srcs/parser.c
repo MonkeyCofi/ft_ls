@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 20:55:17 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/08 21:51:52 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/14 15:36:34 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,13 @@ void	add_directories(t_ls *ls, char **args, int *directory_indices)
 // 	(void)arg_count;
 // }
 
+/**
+ * @brief Parses the command line input and acccounts for options
+ * @param args The command line arguments
+ * @param arg_count The number of arguments
+ * @param ls The main struct that contains ls informatino
+ * @return Nothing
+*/
 void    parse_cli(char **args, int arg_count, t_ls *ls)
 {
 	/*
@@ -120,11 +127,23 @@ void    parse_cli(char **args, int arg_count, t_ls *ls)
 		{
 			dup_str = ft_strdup(args[i]);
 			new = create_queue_node(dup_str);
-			enqueue_back(ls->d_queue, new);
+			enqueue_back(ls->directory_queue, new);
 		}
 		i++;
 	}
-	// add_directories(ls, args, directory_indices);
-	// free(directory_indices);
 	(void)arg_count;
+}
+
+void	print_directories(t_queue* directories)
+{
+	t_queue_node	*front;
+	char			*str;
+
+	front = peek_front(directories);
+	while (front)
+	{
+		str = (char *)front->data;
+		ft_printf("%s\n", str);
+		pop_front(directories);
+	}
 }

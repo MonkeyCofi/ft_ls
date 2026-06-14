@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   queue.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:27 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/08 20:49:44 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/14 15:36:45 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,5 +47,6 @@ void			pop_back(t_queue *queue);
 /* Helper functions */
 void			print_queue_front(t_queue *queue);
 void			print_queue_back(t_queue *queue);
+void			print_directories(t_queue* directories);
 
 #endif

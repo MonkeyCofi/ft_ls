@@ -6,13 +6,14 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 20:46:53 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/13 23:31:16 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/14 15:32:41 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VECTOR_H
 # define VECTOR_H
 
+# include "libft.h"
 # include <stdlib.h>
 
 typedef enum s_data_type
