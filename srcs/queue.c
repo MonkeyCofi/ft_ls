@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:14 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/14 15:51:08 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/14 16:20:59 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ t_queue_node	*create_queue_node(void *data)
 	new->data = data;
 	new->prev = NULL;
 	new->next = NULL;
+	
 	return new;
 }
 
@@ -159,10 +160,18 @@ t_queue_node	*peek_rear(t_queue *queue)
 
 void	pop_front(t_queue* queue)
 {
-	t_queue_node	*next_front;
-
-	next_front = queue->front;
-	queue->front = next_front->next;
+	t_queue_node	*temp;
+	/*
+		take the current front node in a temp variable
+		set queue->front to be queue->front->next
+		set queue->front->prev to be NULL
+	*/
+	temp = queue->front;
+	queue->front = temp->next;
+	if (queue->front)
+	{
+		free(temp);
+	}
 }
 
 void	pop_back(t_queue *queue)
