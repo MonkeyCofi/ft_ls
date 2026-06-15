@@ -124,3 +124,5 @@ Currently, the queue is used to store DIR pointers to each directory passed as a
 
 Just found out that the directories passed as arguments should also follow the rules of listing
 
+### New approach
+Use the queue just for parsing the arguments passed to the program. For the directories, use a dynamic vector. This vector will be used for storing the data representing the directories. When using readdir
