@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 21:05:03 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/15 19:53:07 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/15 21:05:13 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,12 @@ size_t	get_data_size(t_data_type data_type)
 	return -1;
 }
 
+/**
+ * @brief Allocates space for a vector and initializes its results
+ * @param data_type The type of data the vector will store
+ * @param element_count The amount of elements to account for when reserving space
+ * @return The allocated vector
+*/
 t_vector	*alloc_vector(t_data_type data_type, size_t element_count)
 {
 	size_t		memb_size;
@@ -39,7 +45,10 @@ t_vector	*alloc_vector(t_data_type data_type, size_t element_count)
 		return (NULL);
 	vector->data_type = data_type;
 	vector->size = 0;
-	vector->capacity = element_count * memb_size;
+	if (element_count)
+		vector->capacity = element_count * memb_size;
+	else
+		vector->capacity = memb_size;
 	vector->data = malloc(vector->capacity);
 	vector->member_size = memb_size;
 	if (!vector->data)
@@ -74,6 +83,12 @@ t_vector	non_alloc_vector(t_data_type data_type, size_t size)
 	return vector;
 }
 
+/**
+ * @brief Returns the element from vector at given index
+ * @param vector The vector to fetch the element from
+ * @param index The index of the element
+ * @return The element as a char *
+ */
 char	*get_element(t_vector *vector, size_t index)
 {
 	// cant traverse through vector->data
@@ -117,21 +132,18 @@ void		resize(t_vector* vector, size_t new_capacity)
 	vector->capacity = new_capacity;
 }
 
-// if data type is string, 
+/**
+ * @brief Resizes vector if needed and pushes a new element
+ * @param vector The vector to push into
+ * @param element The element to push into the vector
+ * @param data_type The data type of the element
+ * @return Nothinng
+ * @e
+*/
 void	add_to_vector(t_vector * vector, void *element, t_data_type data_type)
 {
-
-	// if sizeof(data_type) * vector->size exceeds vector->capacity, realloc
 	if (vector->member_size * vector->size >= vector->capacity)
-	{
 		resize(vector, vector->capacity * 2);
-		// new_cap = vector->capacity * 2;
-		// new_data = malloc(new_cap);
-		// ft_memmove(new_data, vector->data, vector->capacity);
-		// free(vector->data);
-		// vector->data = new_data;
-		// vector->capacity = new_cap;
-	}
 	if (data_type == STRING || data_type == POINTER)
 		ft_memmove(vector->data + (vector->size * vector->member_size), &element, vector->member_size);
 	else

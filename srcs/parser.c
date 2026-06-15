@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 20:55:17 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/14 16:20:35 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/15 20:18:30 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,7 +144,6 @@ void	print_directories(t_queue* directories)
 	{
 		str = (char *)front->data;
 		ft_printf("%s\n", str);
-		pop_front(directories);
-		front = peek_front(directories);
+		front = front->next;
 	}
 }

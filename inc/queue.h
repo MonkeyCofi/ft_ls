@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:27 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/14 15:36:45 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/15 20:08:22 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ typedef struct t_queue
 {
 	t_queue_node	*front;
 	t_queue_node	*rear;
+	size_t			size;
 }	t_queue;
 
 /* Primary queue functions */

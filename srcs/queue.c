@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:14 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/14 16:20:59 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/15 20:17:01 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 */
 void    enqueue_front(t_queue *queue, t_queue_node *node)
 {
+	queue->size++;
 	if (is_empty(queue))
 	{
 		queue->rear = node;
@@ -51,6 +52,7 @@ bool	is_empty(t_queue *queue)
 */
 void	enqueue_back(t_queue *queue, t_queue_node *node)
 {
+	queue->size++;
 	if (is_empty(queue))
 	{
 		queue->front = node;
@@ -77,7 +79,6 @@ t_queue_node	*create_queue_node(void *data)
 	new->data = data;
 	new->prev = NULL;
 	new->next = NULL;
-	
 	return new;
 }
 
@@ -172,6 +173,7 @@ void	pop_front(t_queue* queue)
 	{
 		free(temp);
 	}
+	queue->size--;
 }
 
 void	pop_back(t_queue *queue)
@@ -183,9 +185,10 @@ void	pop_back(t_queue *queue)
 	rear_prev = rear->prev;
 	queue->rear = rear_prev;
 	rear_prev->next = NULL;
+	queue->size--;
 }
 
 size_t	queue_size(t_queue *queue)
 {
-	return (queue->rear - queue->front);
+	return (queue->size);
 }
