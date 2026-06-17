@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 20:55:17 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/15 20:18:30 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/17 18:04:37 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,35 +33,6 @@ void    parse_options(char *str, t_ls *ls)
 		i++;
 	}
 	ft_printf("The options are %s\n", ls->options);
-}
-
-/**
- * @brief mallocs and adds directories to ls->directories array
- * @param ls The ls struct that stores all program information
- * @param args The command line arguments
- * @param directory_indices An array of indices for args where each index represents a directory name
- * @param directory_count The amount of entries in the directory_indices array
- * @return Nothing
-*/
-void	add_directories(t_ls *ls, char **args, int *directory_indices)
-{
-	int	i;
-	int	directory_count;
-
-	directory_count = ls->directory_count;
-	ls->directories = malloc(sizeof(char *) * (directory_count + 1));
-	if (ls->directories == NULL)
-	{
-		ls->exit_code = 2;
-		return ;
-	}
-	ls->directories[directory_count] = 0;
-	i = 0;
-	while (i < directory_count)
-	{
-		ls->directories[i] = ft_strdup(args[directory_indices[i]]);
-		i++;
-	}
 }
 
 

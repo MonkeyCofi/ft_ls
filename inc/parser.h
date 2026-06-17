@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 21:49:09 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/08 21:49:42 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/17 18:04:43 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,5 @@ typedef struct s_ls t_ls;
 
 void    parse_options(char *str, t_ls *ls);
 void    parse_cli(char **args, int arg_count, t_ls *ls);
-void	add_directories(t_ls *ls, char **args, int *directory_indices);
 
 #endif

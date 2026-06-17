@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/16 17:18:29 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/16 17:21:19 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/17 18:08:25 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,17 @@ void		resize(t_vector* vector, size_t new_capacity)
 	free(vector->data);
 	vector->data = new_data;
 	vector->capacity = new_capacity;
+}
+
+void	print_vector(t_vector *vector)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < vector->size)
+	{
+		if (vector->data_type == STRING)
+			ft_printf("%s ", get_element(vector, i));
+		i++;
+	}
 }

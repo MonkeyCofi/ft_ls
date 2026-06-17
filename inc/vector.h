@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 20:46:53 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/15 19:47:09 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/17 18:08:34 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,6 @@ t_vector	non_alloc_vector(t_data_type data_type, size_t size);
 char		*get_element(t_vector *vector, size_t index);
 void		add_to_vector(t_vector * vector, void *element, t_data_type data_type);
 void		resize(t_vector* vector, size_t new_capacity);
+void		print_vector(t_vector *vector);
 
 #endif

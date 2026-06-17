@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ls.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:24 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/16 20:10:23 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/17 18:13:04 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,15 +35,14 @@ typedef enum s_options
 
 typedef struct s_ls
 {
-	t_queue	*entries;
-	t_queue	*directory_queue;	// queue of all directory strings
-	size_t	option_count;
-	char	options[OPTION_COUNT + 1];
-	char	**directories;
-	int		directory_count;
-	int		exit_code;
-	int		error_code;
-	t_queue	*open_directories;
+	t_queue		*directory_queue;	// queue of all directory strings
+	t_vector	*directories;		// array of directory strings
+	t_vector	*dir_entries;		// array of directory entries
+	size_t		option_count;
+	char		options[OPTION_COUNT + 1];
+	int			directory_count;
+	int			exit_code;
+	int			error_code;
 }   t_ls;
 
 void    mergesort_string(char **array, int start, int end);
