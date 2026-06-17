@@ -3,3 +3,4 @@ ft_ls
 temp*
 *.o
 *.a
+.vscode

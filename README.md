@@ -126,3 +126,9 @@ Just found out that the directories passed as arguments should also follow the r
 
 ### New approach
 Use the queue just for parsing the arguments passed to the program. For the directories, use a dynamic vector. This vector will be used for storing the data representing the directories. When using readdir
+
+A vector storing
+```
+struct dirent *
+```
+pointers will be used. Each filename in this vector will be sorted using mergesort. If the -t option is set, the elements will be sorted by the time modified instead. If -r option is set, iterate through the vector in reverse

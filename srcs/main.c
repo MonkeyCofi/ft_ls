@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:41 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/17 00:55:45 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/17 16:34:34 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,20 +35,8 @@ int main(int ac, char **av)
 		once sorted, open directories in that order
 		
 	*/
-	char *strs[] = {"cabbage", "zone", "apple", "weed", "botany", "zigzag"};
-	int size = sizeof(strs) / sizeof(char *);
-	ft_printf("size %d\n", size);
-	for (int i = 0; i < size; i++)
-	{
-		ft_printf("%s ", strs[i]);
-	}
-	ft_printf("\n");
-	mergesort_string(strs, 0, sizeof(strs) / sizeof(char *));
-	for (int i = 0; i < size; i++)
-	{
-		ft_printf("%s ", strs[i]);
-	}
-	ft_printf("\n");
+
+	mergesort_string((char **)vector->data, 0, vector->size);
 	(void)ac;
 	(void)av;
 	(void)vector;
