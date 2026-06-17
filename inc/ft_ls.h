@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ls.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:24 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/14 15:28:04 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/16 20:10:23 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,5 +45,7 @@ typedef struct s_ls
 	int		error_code;
 	t_queue	*open_directories;
 }   t_ls;
+
+void    mergesort_string(char **array, int start, int end);
 
 #endif

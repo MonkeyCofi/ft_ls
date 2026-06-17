@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 21:05:03 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/15 21:05:13 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/16 20:09:48 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,55 +84,6 @@ t_vector	non_alloc_vector(t_data_type data_type, size_t size)
 }
 
 /**
- * @brief Returns the element from vector at given index
- * @param vector The vector to fetch the element from
- * @param index The index of the element
- * @return The element as a char *
- */
-char	*get_element(t_vector *vector, size_t index)
-{
-	// cant traverse through vector->data
-	// you have to return vector->data_type * index and cast data as char *
-	char	*data;
-	char	*ptr;
-
-	data = vector->data;
-	if (vector->data_type == STRING || vector->data_type == POINTER)
-	{
-		ft_memcpy(&ptr, data + (index * vector->member_size), vector->member_size);
-		return (ptr);		
-	}
-	return (data + (index * vector->member_size));
-}
-
-size_t	get_size(t_vector *vector)
-{
-	return (vector->size);
-}
-
-size_t	get_capacity(t_vector *vector)
-{
-	return (vector->capacity);
-}
-
-void		resize(t_vector* vector, size_t new_capacity)
-{
-	void	*new_data;
-
-	new_data = malloc(new_capacity);
-	if (!new_data)
-	{
-		vector->capacity = -1;
-		vector->size = -1;
-		return ;
-	}
-	ft_memmove(new_data, vector->data, vector->capacity);
-	free(vector->data);
-	vector->data = new_data;
-	vector->capacity = new_capacity;
-}
-
-/**
  * @brief Resizes vector if needed and pushes a new element
  * @param vector The vector to push into
  * @param element The element to push into the vector
@@ -151,8 +102,26 @@ void	add_to_vector(t_vector * vector, void *element, t_data_type data_type)
 	vector->size++;
 }
 
+/**
+ * @brief Frees the vector and the elements inside it if they are allocated addresses
+ * @param vector The vector to free
+ * @return Nothing
+*/
 void	free_vector(t_vector* vector)
 {
+	// size_t	i;
+	// size_t	size;
+
+	// if (vector->data_type == STRING || vector->data_type == POINTER)
+	// {
+	// 	i = 0;
+	// 	size = vector->size;
+	// 	while (i < size)
+	// 	{
+	// 		free(((char *)vector->data)[i]);
+	// 		i += 1;
+	// 	}
+	// }
 	free(vector->data);
 	free(vector);
 }

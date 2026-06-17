@@ -1,0 +1,68 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   vector_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/06/16 17:18:29 by pipolint          #+#    #+#             */
+/*   Updated: 2026/06/16 17:21:19 by pipolint         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "vector.h"
+
+/**
+ * @brief Returns the element from vector at given index
+ * @param vector The vector to fetch the element from
+ * @param index The index of the element
+ * @return The element as a char *
+ */
+char	*get_element(t_vector *vector, size_t index)
+{
+	// cant traverse through vector->data
+	// you have to return vector->data_type * index and cast data as char *
+	char	*data;
+	char	*ptr;
+
+	data = vector->data;
+	if (vector->data_type == STRING || vector->data_type == POINTER)
+	{
+		ft_memcpy(&ptr, data + (index * vector->member_size), vector->member_size);
+		return (ptr);		
+	}
+	return (data + (index * vector->member_size));
+}
+
+size_t	get_size(t_vector *vector)
+{
+	return (vector->size);
+}
+
+size_t	get_capacity(t_vector *vector)
+{
+	return (vector->capacity);
+}
+
+/**
+ * @brief Resizes the dynamic vector to the new_capacity size
+ * @param vector The vector to resize
+ * @param new_capacity The new capacity
+ * @return Nothing
+*/
+void		resize(t_vector* vector, size_t new_capacity)
+{
+	void	*new_data;
+
+	new_data = malloc(new_capacity);
+	if (!new_data)
+	{
+		vector->capacity = -1;
+		vector->size = -1;
+		return ;
+	}
+	ft_memmove(new_data, vector->data, vector->capacity);
+	free(vector->data);
+	vector->data = new_data;
+	vector->capacity = new_capacity;
+}
