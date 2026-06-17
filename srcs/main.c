@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:41 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/17 19:00:05 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/17 21:23:47 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ int main(int ac, char **av)
 	
 	initialize_ls(&ls);
 	parse_cli(av, ac, &ls);
-	print_directories(ls.directory_queue);
 	front = peek_front(ls.directory_queue);
 	while (front)
 	{
@@ -37,8 +36,6 @@ int main(int ac, char **av)
 		front = peek_front(ls.directory_queue);
 	}
 	mergesort_string(ls.directories->data, 0, ls.directories->size);
-	ls.dir_entries = alloc_vector(POINTER, ls.directories->size);
-	print_vector(ls.directories);
 	/*
 		each entry in ls.directories is a directory name
 		create a vector of DIR pointers which will be in 
@@ -51,19 +48,69 @@ int main(int ac, char **av)
 		if (ptr)
 			add_to_vector(pointers, ptr, POINTER);
 	}
-	t_vector *entries = alloc_vector(POINTER, 1);
 	// call readdir() on each open directory
-	for (size_t i = 0; i < pointers->size; i++)
+	if (ft_strchr(ls.options, 'r') == NULL)
 	{
-		DIR *dir = (DIR *)get_element(pointers, i);
-		// save every directory into the entires vector
-		struct dirent* entry = readdir(dir);
-		while (entry)
+		for (size_t i = 0; i < pointers->size; i++)
 		{
-			add_to_vector(entries, entry, POINTER);
-			entry = readdir(dir);
+			t_vector *entries = alloc_vector(POINTER, 1);
+			DIR *dir = (DIR *)get_element(pointers, i);
+			// save every directory into the entires vector
+			struct dirent* entry = readdir(dir);
+			while (entry)
+			{
+				if (entry->d_name[0] == '.' && !ft_strchr(ls.options, 'a'))
+				{
+					entry = readdir(dir);
+					continue;
+				}
+				add_to_vector(entries, entry, POINTER);
+				entry = readdir(dir);
+			}
+			(void)entry;
+			printf("%s:\n", get_element(ls.directories, i));
+			merge_dirent(entries->data, 0, entries->size);
+			for (size_t j = 0; j < entries->size; j++)
+			{
+				printf("%s  ", ((struct dirent *)get_element(entries, j))->d_name);
+			}
+			printf("\n\n");
+			free_vector(entries);
+			closedir((DIR *)get_element(pointers, i));
 		}
-		(void)entry;
 	}
-	(void)entries;
+	else
+	{
+		for (size_t i = pointers->size; i-- > 0;)
+		{
+			t_vector *entries = alloc_vector(POINTER, 1);
+			DIR *dir = (DIR *)get_element(pointers, i);
+			// save every directory into the entires vector
+			struct dirent* entry = readdir(dir);
+			while (entry)
+			{
+				if (entry->d_name[0] == '.' && !ft_strchr(ls.options, 'a'))
+				{
+					entry = readdir(dir);
+					continue;
+				}
+				add_to_vector(entries, entry, POINTER);
+				entry = readdir(dir);
+			}
+			(void)entry;
+			printf("%s:\n", get_element(ls.directories, i));
+			merge_dirent(entries->data, 0, entries->size);
+			for (size_t j = entries->size; j-- > 0;)
+			{
+				printf("%s  ", ((struct dirent *)get_element(entries, j))->d_name);
+			}
+			printf("\n\n");
+			free_vector(entries);
+			closedir((DIR *)get_element(pointers, i));
+		}
+	}
+	free_queue(ls.directory_queue);
+	free_vector(pointers);
+	free_vector(ls.directories);
+	printf("here\n");
 }

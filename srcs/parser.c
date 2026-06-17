@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 20:55:17 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/17 18:04:37 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/17 21:25:51 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,10 +97,17 @@ void    parse_cli(char **args, int arg_count, t_ls *ls)
 		else
 		{
 			dup_str = ft_strdup(args[i]);
-			new = create_queue_node(dup_str);
+			new = create_queue_node(dup_str, true);
 			enqueue_back(ls->directory_queue, new);
 		}
 		i++;
+	}
+	// if the queue is empty, add the current directory to the queue
+	if (is_empty(ls->directory_queue))
+	{
+		dup_str = ft_strdup("./");
+		create_queue_node(dup_str, true);
+		enqueue_back(ls->directory_queue, new);
 	}
 	(void)arg_count;
 }

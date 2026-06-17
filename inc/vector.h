@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 20:46:53 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/17 18:08:34 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/17 20:41:57 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,5 +38,6 @@ char		*get_element(t_vector *vector, size_t index);
 void		add_to_vector(t_vector * vector, void *element, t_data_type data_type);
 void		resize(t_vector* vector, size_t new_capacity);
 void		print_vector(t_vector *vector);
+void		free_vector(t_vector* vector);
 
 #endif

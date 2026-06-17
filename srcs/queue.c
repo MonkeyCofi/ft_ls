@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   queue.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:14 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/15 20:17:01 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/17 21:19:17 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "queue.h"
+#include <stdio.h>
 
 /**
  * @brief Adds a node to the front of the list (the start)
@@ -69,7 +70,7 @@ void	enqueue_back(t_queue *queue, t_queue_node *node)
  * @param data The data to pass to the node
  * @return The malloc'd node
 */
-t_queue_node	*create_queue_node(void *data)
+t_queue_node	*create_queue_node(void *data, bool alloc_data)
 {
 	t_queue_node	*new;
 
@@ -79,6 +80,7 @@ t_queue_node	*create_queue_node(void *data)
 	new->data = data;
 	new->prev = NULL;
 	new->next = NULL;
+	new->alloc_data = alloc_data;
 	return new;
 }
 
@@ -96,6 +98,8 @@ void	free_queue(t_queue* queue)
 	while (trav)
 	{
 		temp = trav->next;
+		if (trav->alloc_data)
+			free(trav->data);
 		free(trav);
 		trav = temp;
 	}
@@ -171,6 +175,8 @@ void	pop_front(t_queue* queue)
 	queue->front = temp->next;
 	if (queue->front)
 	{
+		// if (temp->alloc_data)
+		// 	free(temp->data);
 		free(temp);
 	}
 	queue->size--;
@@ -184,6 +190,12 @@ void	pop_back(t_queue *queue)
 	rear = queue->rear;
 	rear_prev = rear->prev;
 	queue->rear = rear_prev;
+	if (rear)
+	{
+		if (rear->alloc_data)
+			free(rear->data);
+		free(rear);
+	}
 	rear_prev->next = NULL;
 	queue->size--;
 }
