@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 20:55:17 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/17 21:25:51 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/18 17:05:11 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void    parse_options(char *str, t_ls *ls)
 			ls->options[(*opt_count)++] = str[i];
 		i++;
 	}
-	ft_printf("The options are %s\n", ls->options);
 }
 
 
@@ -106,7 +105,7 @@ void    parse_cli(char **args, int arg_count, t_ls *ls)
 	if (is_empty(ls->directory_queue))
 	{
 		dup_str = ft_strdup("./");
-		create_queue_node(dup_str, true);
+		new = create_queue_node(dup_str, true);
 		enqueue_back(ls->directory_queue, new);
 	}
 	(void)arg_count;

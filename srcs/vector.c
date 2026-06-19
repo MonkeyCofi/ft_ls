@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 21:05:03 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/16 20:09:48 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/18 14:38:21 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ size_t	get_data_size(t_data_type data_type)
  * @param element_count The amount of elements to account for when reserving space
  * @return The allocated vector
 */
-t_vector	*alloc_vector(t_data_type data_type, size_t element_count)
+t_vector	*alloc_vector(t_data_type data_type, size_t element_count, bool should_free)
 {
 	size_t		memb_size;
 	t_vector	*vector;
@@ -45,6 +45,7 @@ t_vector	*alloc_vector(t_data_type data_type, size_t element_count)
 		return (NULL);
 	vector->data_type = data_type;
 	vector->size = 0;
+	vector->should_free = should_free;
 	if (element_count)
 		vector->capacity = element_count * memb_size;
 	else
@@ -109,19 +110,17 @@ void	add_to_vector(t_vector * vector, void *element, t_data_type data_type)
 */
 void	free_vector(t_vector* vector)
 {
-	// size_t	i;
-	// size_t	size;
+	size_t	i;
 
-	// if (vector->data_type == STRING || vector->data_type == POINTER)
-	// {
-	// 	i = 0;
-	// 	size = vector->size;
-	// 	while (i < size)
-	// 	{
-	// 		free(((char *)vector->data)[i]);
-	// 		i += 1;
-	// 	}
-	// }
+	i = 0;
+	if (vector->should_free)
+	{
+		while (i < vector->size)
+		{
+			free((char *)get_element(vector, i));
+			i++;
+		}
+	}
 	free(vector->data);
 	free(vector);
 }

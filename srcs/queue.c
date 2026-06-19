@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:14 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/17 21:19:17 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/18 14:28:34 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,12 +173,9 @@ void	pop_front(t_queue* queue)
 	*/
 	temp = queue->front;
 	queue->front = temp->next;
-	if (queue->front)
-	{
-		// if (temp->alloc_data)
-		// 	free(temp->data);
-		free(temp);
-	}
+	if (temp->alloc_data)
+		free(temp->data);
+	free(temp);
 	queue->size--;
 }
 

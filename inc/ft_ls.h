@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:24 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/17 20:11:39 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/18 17:58:21 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,14 @@ typedef struct s_ls
 	int			error_code;
 }   t_ls;
 
+typedef struct s_dir_ptr
+{
+	char	*directory_name;
+	DIR		*directory;
+}	t_dir_ptr;
+
 void    mergesort_string(char **array, int start, int end);
 void    merge_dirent(struct dirent **entries, int start, int end);
+void    merge_directories(t_dir_ptr **dir_ptrs, int start, int end);
 
 #endif
