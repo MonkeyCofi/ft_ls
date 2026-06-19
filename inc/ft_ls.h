@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:24 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/18 17:58:21 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/19 16:27:34 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,17 @@
 
 # include <dirent.h>
 # include <errno.h>
-# include <stdio.h>
+# include <grp.h>
+# include "libft.h"
 # include "parser.h"
+# include <pwd.h>
 # include "queue.h"
+# include <stdio.h>
+# include <string.h>
+# include <sys/stat.h>
+# include <sys/types.h>
+# include <sys/ioctl.h>
+# include <time.h>
 # include "vector.h"
 
 typedef enum s_options

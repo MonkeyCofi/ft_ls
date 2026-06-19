@@ -6,18 +6,11 @@
 /*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:41 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/19 15:53:54 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/19 16:33:59 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-#include <grp.h>
-#include <pwd.h>
-#include <string.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <sys/ioctl.h>
-#include <time.h>
 
 void	initialize_ls(t_ls *ls)
 {
@@ -26,6 +19,8 @@ void	initialize_ls(t_ls *ls)
 	ls->directory_queue = create_queue();
 	ls->dir_entries = NULL;
 }
+
+const char *months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
 /**
  * @param ls The ls struct
@@ -105,12 +100,12 @@ void open_directories(t_ls *ls, t_vector *pointers)
 				ft_printf("%ld ", st.st_nlink);
 				ft_printf("%s ", grp->gr_name);
 				ft_printf("%s ", pw->pw_name);
-				// char *str = ft_itoa(st.st_size);
-				// int length = ft_strlen(str);
-				ft_printf("%6d ", st.st_size);
-				// time_t time = st.st_mtime;
-				// struct tm now_t = *localtime(&time);
-				// ft_printf("%ld ", );
+				ft_printf("%ld ", st.st_size);
+				time_t time = st.st_mtime;
+				struct tm now_t = *localtime(&time);
+				(void)now_t;
+				ft_printf("%s %d ", months[now_t.tm_mon], now_t.tm_mday);
+				ft_printf("%d:%02d ", now_t.tm_hour, now_t.tm_min);
 			}
 			if (S_ISDIR(st.st_mode))
 				ft_printf("\e[1;34m%s\e[0m  ", elem->d_name);
@@ -170,11 +165,12 @@ void open_directories_reverse(t_ls *ls, t_vector *pointers)
 			else
 				parent_dir_slash = parent_dir;
 			char *joined_dir = ft_strjoin(parent_dir_slash, elem->d_name);
+			struct stat st;
+			lstat(joined_dir, &st);
 			// printf("directory %s\n", joined_dir);
 			if (ft_strchr(ls->options, 'R'))
 			{
-				struct stat st;
-				if (lstat(joined_dir, &st) == 0 && S_ISDIR(st.st_mode))
+				if (S_ISDIR(st.st_mode))
 				{
 					// Avoid recursion on "." and ".."
 					if (ft_strncmp(elem->d_name, ".", -1) != 0 && ft_strncmp(elem->d_name, "..", -1) != 0)
@@ -190,9 +186,35 @@ void open_directories_reverse(t_ls *ls, t_vector *pointers)
 					}
 				}
 			}
-			printf("%s ", elem->d_name);
+			if (ft_strchr(ls->options, 'l'))
+			{
+				mode_t	perms = st.st_mode;
+				struct passwd *pw = getpwuid(st.st_uid);
+				struct group *grp = getgrgid(st.st_gid);
+				// print the permissions
+				ft_printf("%c", S_ISDIR(st.st_mode) ? 'd' : '-');
+				ft_printf("%c%c%c", perms & S_IRUSR ? 'r' : '-', perms & S_IWUSR ? 'w' : '-', perms & S_IXUSR ? 'x' : '-');
+				ft_printf("%c%c%c", perms & S_IRGRP ? 'r' : '-', perms & S_IWGRP ? 'w' : '-', perms & S_IXGRP ? 'x' : '-');
+				ft_printf("%c%c%c ", perms & S_IROTH ? 'r' : '-', perms & S_IWOTH ? 'w' : '-', perms & S_IXOTH ? 'x' : '-');
+				ft_printf("%ld ", st.st_nlink);
+				ft_printf("%s ", grp->gr_name);
+				ft_printf("%s ", pw->pw_name);
+				ft_printf("%ld ", st.st_size);
+				time_t time = st.st_mtime;
+				struct tm now_t = *localtime(&time);
+				(void)now_t;
+				// ft_printf("%ld ", );
+			}
+			if (S_ISDIR(st.st_mode))
+				ft_printf("\e[1;34m%s\e[0m  ", elem->d_name);
+			else if (st.st_mode & S_IXUSR)
+				ft_printf("\e[1;32m%s\e[0m  ", elem->d_name);
+			else
+				ft_printf("\e[m%s\e[0m  ", elem->d_name);
+			if (ft_strchr(ls->options, 'l'))
+				ft_printf("\n");
 		}
-		printf("\n%c", (i != pointers->size) ? '\n' : 0);
+		ft_printf("\n%c", (i != pointers->size) ? '\n' : 0);
 		open_directories(ls, rec_directories);
 		free_vector(entries);
 		closedir(dir);
