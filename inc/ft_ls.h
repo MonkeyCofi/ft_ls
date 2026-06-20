@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:24 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/19 16:27:34 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/19 20:11:23 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,11 @@ typedef struct s_ls
 typedef struct s_dir_ptr
 {
 	char	*directory_name;
+	size_t	longest_filename;
+	size_t	longest_filesize;
+	size_t	longest_hlsize;
+	size_t	longest_owner;
+	size_t	longest_group;
 	DIR		*directory;
 }	t_dir_ptr;
 

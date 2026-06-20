@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:41 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/19 16:33:59 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/19 20:33:38 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,39 +20,78 @@ void	initialize_ls(t_ls *ls)
 	ls->dir_entries = NULL;
 }
 
+void	check_group_owner(struct stat *st, t_dir_ptr *current_dir)
+{
+	struct group	*gw;
+	struct passwd	*pw;
+
+	gw = getgrgid(st->st_gid);
+	pw = getpwuid(st->st_uid);
+	if (ft_strlen(pw->pw_name) > current_dir->longest_owner)
+		current_dir->longest_owner = ft_strlen(pw->pw_name);
+	if (ft_strlen(gw->gr_name) > current_dir->longest_group)
+		current_dir->longest_group = ft_strlen(gw->gr_name);
+}
+
+void	add_dirent_entries(t_ls *ls, t_vector *dirent_entries, t_dir_ptr* current_dir)
+{
+	struct dirent	*entry;
+	struct stat		st;
+	char			*size_str;
+
+	entry = readdir(current_dir->directory);
+	while (entry)
+	{
+		if (entry->d_name[0] == '.' && !ft_strchr(ls->options, 'a'))
+		{
+			entry = readdir(current_dir->directory);
+			continue;
+		}
+		add_to_vector(dirent_entries, entry, POINTER);
+		lstat(entry->d_name, &st);
+		size_str = ft_itoa(st.st_size);
+		check_group_owner(&st, current_dir);
+		if (ft_strlen(size_str) > current_dir->longest_filesize)
+			current_dir->longest_filesize = ft_strlen(size_str);
+		if (ft_strlen(entry->d_name) > current_dir->longest_filename)
+			current_dir->longest_filename = ft_strlen(entry->d_name);
+		entry = readdir(current_dir->directory);
+		free(size_str);
+	}
+}
+
 const char *months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
 /**
  * @param ls The ls struct
  * @param pointers Vector cointaing DIR *
  */
-void open_directories(t_ls *ls, t_vector *pointers)
+void open_directories(t_ls *ls, t_vector *directories_ptrs)
 {
+	/*
+		every directory has its own entries
+		within each directory, its own entries has their own largest size and largest filename
+		
+	*/
 	t_vector	*rec_directories;
+	size_t		length = 0;
+	struct winsize w;
 
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 	rec_directories = NULL;
-	for (size_t i = 0; i < pointers->size; i++)
+	size_t	col_written = 0;
+	size_t	longest_fname = 0;
+	for (size_t i = 0; i < directories_ptrs->size; i++)
 	{
 		t_vector *entries = alloc_vector(POINTER, 1, false);
-		t_dir_ptr *ptr = (t_dir_ptr *)get_element(pointers, i);
-		// DIR *dir = (DIR *)get_element(pointers, i);
+		t_dir_ptr *ptr = (t_dir_ptr *)get_element(directories_ptrs, i);
 		DIR *dir = ptr->directory;
 		if (!dir)
 		{
 			printf("no dir\n");
 			exit(1);
 		}
-		struct dirent* entry = readdir(dir);
-		while (entry)
-		{
-			if (entry->d_name[0] == '.' && !ft_strchr(ls->options, 'a'))
-			{
-				entry = readdir(dir);
-				continue;
-			}
-			add_to_vector(entries, entry, POINTER);
-			entry = readdir(dir);
-		}
+		add_dirent_entries(ls, entries, dir, &length, &longest_fname);
 		ft_printf("%s:\n", ptr->directory_name);
 		merge_dirent(entries->data, 0, entries->size);
 		rec_directories = alloc_vector(POINTER, 1, false);
@@ -66,6 +105,7 @@ void open_directories(t_ls *ls, t_vector *pointers)
 			else
 				parent_dir_slash = parent_dir;
 			char *joined_dir = ft_strjoin(parent_dir_slash, elem->d_name);
+			free(parent_dir_slash);
 			struct stat st;
 			lstat(joined_dir, &st);
 			// printf("directory %s\n", joined_dir);
@@ -100,27 +140,53 @@ void open_directories(t_ls *ls, t_vector *pointers)
 				ft_printf("%ld ", st.st_nlink);
 				ft_printf("%s ", grp->gr_name);
 				ft_printf("%s ", pw->pw_name);
-				ft_printf("%ld ", st.st_size);
+				ft_printf("%*d ", length + 1, st.st_size);
 				time_t time = st.st_mtime;
 				struct tm now_t = *localtime(&time);
-				(void)now_t;
-				ft_printf("%s %d ", months[now_t.tm_mon], now_t.tm_mday);
-				ft_printf("%d:%02d ", now_t.tm_hour, now_t.tm_min);
+				ft_printf("%s %02d ", months[now_t.tm_mon], now_t.tm_mday);
+				ft_printf("%02d:%02d ", now_t.tm_hour, now_t.tm_min);
+			}
+			
+			if (col_written > w.ws_col)
+			{
+				ft_printf("col written %d w.ws_col %d\n", col_written, w.ws_col);
+				col_written = 0;
+				ft_printf("\n");
 			}
 			if (S_ISDIR(st.st_mode))
-				ft_printf("\e[1;34m%s\e[0m  ", elem->d_name);
+				col_written += ft_printf("\e[1;34m%-*s\e[0m  ", longest_fname, elem->d_name);
 			else if (st.st_mode & S_IXUSR)
-				ft_printf("\e[1;32m%s\e[0m  ", elem->d_name);
+				col_written += ft_printf("\e[1;32m%-*s\e[0m  ", longest_fname, elem->d_name);
 			else
-				ft_printf("\e[m%s\e[0m  ", elem->d_name);
+				col_written += ft_printf("\e[m%-*s\e[0m  ", longest_fname, elem->d_name);
 			if (ft_strchr(ls->options, 'l'))
+			{
 				ft_printf("\n");
+				col_written = 0;
+			}
 		}
-		ft_printf("\n%c", (i != pointers->size) ? '\n' : 0);
+		ft_printf("\n");
+		// ft_printf("\n%c", (i != directories_ptrs->size - 1) ? '\n' : 0);
 		open_directories(ls, rec_directories);
 		free_vector(entries);
 		closedir(dir);
+		col_written = 0;
 	}
+}
+
+t_dir_ptr	*create_tdirptr(char *directory_name, DIR *dir_ptr)
+{
+	t_dir_ptr	*ptr;
+
+	ptr = malloc(sizeof(t_dir_ptr));
+	if (!ptr)
+		return NULL;
+	ptr->directory_name = directory_name;
+	ptr->directory = dir_ptr;
+	ptr->longest_filename = 0;
+	ptr->longest_filesize = 0;
+	ptr->longest_hlsize = 0;
+	return ptr;
 }
 
 void open_directories_reverse(t_ls *ls, t_vector *pointers)
@@ -245,7 +311,7 @@ int main(int ac, char **av)
 	}
 	(void)initial_directories;
 	mergesort_string(ls.directories->data, 0, ls.directories->size);
-	t_vector *pointers = alloc_vector(POINTER, ls.directories->size, false);
+	t_vector *directory_ptrs = alloc_vector(POINTER, ls.directories->size, false);
 	for (size_t i = 0; i < ls.directories->size; i++)
 	{
 		t_dir_ptr *directory_ptr = malloc(sizeof(t_dir_ptr));
@@ -253,47 +319,18 @@ int main(int ac, char **av)
 		DIR *ptr = opendir(get_element(ls.directories, i));
 		if (ptr)
 		{
-			// add_to_vector(pointers, ptr, POINTER);
+			// add_to_vector(directory_ptrs, ptr, POINTER);
 			directory_ptr->directory = ptr;
-			add_to_vector(pointers, directory_ptr, POINTER);
+			add_to_vector(directory_ptrs, directory_ptr, POINTER);
 		}
 		else
 			printf("failed %s\n", get_element(ls.directories, i));
 	}
 	if (ft_strchr(ls.options, 'r') == NULL)
-		open_directories(&ls, pointers);
+		open_directories(&ls, directory_ptrs);
 	else
-	{
-		open_directories_reverse(&ls, pointers);
-		// for (size_t i = pointers->size; i-- > 0;)
-		// {
-		// 	t_vector *entries = alloc_vector(POINTER, 1, false);
-		// 	DIR *dir = (DIR *)get_element(pointers, i);
-		// 	// save every directory into the entires vector
-		// 	struct dirent* entry = readdir(dir);
-		// 	while (entry)
-		// 	{
-		// 		if (entry->d_name[0] == '.' && !ft_strchr(ls.options, 'a'))
-		// 		{
-		// 			entry = readdir(dir);
-		// 			continue;
-		// 		}
-		// 		add_to_vector(entries, entry, POINTER);
-		// 		entry = readdir(dir);
-		// 	}
-		// 	(void)entry;
-		// 	printf("%s:\n", get_element(ls.directories, i));
-		// 	merge_dirent(entries->data, 0, entries->size);
-		// 	for (size_t j = entries->size; j-- > 0;)
-		// 	{
-		// 		printf("%s  ", ((struct dirent *)get_element(entries, j))->d_name);
-		// 	}
-		// 	printf("\n\n");
-		// 	free_vector(entries);
-		// 	closedir((DIR *)get_element(pointers, i));
-		// }
-	}
+		open_directories_reverse(&ls, directory_ptrs);
 	free_queue(ls.directory_queue);
-	free_vector(pointers);
+	free_vector(directory_ptrs);
 	free_vector(ls.directories);
 }
