@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 20:46:53 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/18 15:11:31 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/19 14:24:52 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define VECTOR_H
 
 # include "libft.h"
+# include <stdbool.h>
 # include <stdlib.h>
 
 typedef enum s_data_type
