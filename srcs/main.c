@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:41 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/20 22:30:58 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/21 16:27:47 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,93 @@ void	check_group_owner(struct stat *st, t_dir_ptr *current_dir)
 	}
 }
 
+void	add_directory(char *path, t_vector *directory_vector)
+{
+	struct stat	st;
+	DIR			*open_dir;
+	t_dir_ptr	*dir_ptr;
+
+	if (lstat(path, &st) == 0)
+	{
+		if (S_ISDIR(st.st_mode))
+		{
+			open_dir = opendir(path);
+			if (!open_dir)
+			{
+				perror("opendir");
+				return ;
+			}
+			dir_ptr = create_tdirptr(path, open_dir);
+			add_to_vector(directory_vector, dir_ptr, POINTER);
+		}
+	}
+}
+
+char	*build_path(t_ls *ls, const char *directory, struct dirent *entry)
+{
+	char	*path;
+	char	*temp;
+
+	path = ft_strjoin(directory, "/");
+	if (!path)
+	{
+		return (NULL);
+	}
+	temp = path;
+	path = ft_strjoin(path, entry->d_name);
+	if (!path)
+	{
+		return (NULL);
+	}
+	free(temp);	
+	(void)ls;
+	return (path);
+}
+
+void	check_longest(t_ls *ls, t_dir_ptr *current_dir, struct dirent *entry)
+{
+	char		*path;
+	char		*itoa_str;
+	struct stat	st;
+
+	path = build_path(ls, current_dir->directory_name, entry);
+	if (lstat(path, &st) == -1)
+	{
+		perror("lstat");
+		exit(1);
+	}
+	itoa_str = NULL;
+	itoa_str = ft_itoa(st.st_size);
+	if (!itoa_str)
+		return ;
+	if (ft_strlen(itoa_str) > current_dir->longest_filesize)
+		current_dir->longest_filesize = ft_strlen(itoa_str);
+	if (ft_strlen(entry->d_name) > current_dir->longest_filename)
+		current_dir->longest_filename = ft_strlen(entry->d_name);
+	if (ft_strchr(ls->options, 'l'))
+	{
+		check_group_owner(&st, current_dir);
+		itoa_str = ft_itoa(st.st_nlink);
+		if (ft_strlen(itoa_str) > current_dir->longest_hlsize)
+		{
+			ft_printf("here\n");
+			current_dir->longest_hlsize = ft_strlen(itoa_str);
+			ft_printf("hl %d\n", current_dir->longest_hlsize);
+		}
+	}
+	free(itoa_str);
+}
+
 void	add_dirent_entries(t_ls *ls, t_vector *dirent_entries, t_dir_ptr* current_dir)
 {
 	struct dirent	*entry;
-	struct stat		st;
-	char			*size_str;
-	char			*parent_slash;
-	char			*path;
+	// struct stat		st;
+	// char			*size_str;
+	// char			*parent_slash;
+	// char			*path;
 
 	entry = readdir(current_dir->directory);
-	parent_slash = ft_strjoin(current_dir->directory_name, "/");
+	// parent_slash = ft_strjoin(current_dir->directory_name, "/");
 	while (entry)
 	{
 		if (entry->d_name[0] == '.' && !ft_strchr(ls->options, 'a'))
@@ -76,26 +153,8 @@ void	add_dirent_entries(t_ls *ls, t_vector *dirent_entries, t_dir_ptr* current_d
 			continue;
 		}
 		add_to_vector(dirent_entries, entry, POINTER);
-		path = ft_strjoin(parent_slash, entry->d_name);
-		size_str = ft_itoa(st.st_size);
-		if (ft_strlen(size_str) > current_dir->longest_filesize)
-			current_dir->longest_filesize = ft_strlen(size_str);
-		if (ft_strlen(entry->d_name) > current_dir->longest_filename)
-			current_dir->longest_filename = ft_strlen(entry->d_name);
-		if (ft_strchr(ls->options, 'l'))
-		{
-			if (lstat(path, &st) == -1)
-			{
-				perror("lstat");
-				exit(1);
-			}
-			check_group_owner(&st, current_dir);
-			size_str = ft_itoa(st.st_nlink);
-			if (ft_strlen(size_str) > current_dir->longest_hlsize)
-				current_dir->longest_hlsize = ft_strlen(size_str);
-		}
+		check_longest(ls, current_dir, entry);
 		entry = readdir(current_dir->directory);
-		free(path);
 	}
 }
 
@@ -137,68 +196,44 @@ void open_directories(t_ls *ls, t_vector *directories_ptrs)
 		within each directory, its own entries has their own largest size and largest filename
 		
 	*/
-	t_vector	*rec_directories;
-	struct winsize w;
-	size_t		col_written;
+	char			*path;
+	size_t			col_written;
+	t_vector		*rec_directories;
+	struct stat		st;
+	struct winsize	w;
 
 	if (directories_ptrs->size == 0)
 		return ;
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 	rec_directories = NULL;	// a vector of directories in the current directory
 	col_written = 0;
-	// for (size_t i = 0; i < directories_ptrs->size; i++)
-	for (size_t i = directories_ptrs->size; i-- > 0;)
+	for (size_t i = 0; i < directories_ptrs->size; i++)
 	{
 		t_vector *entries = alloc_vector(POINTER, 1, false);
 		t_dir_ptr *ptr = (t_dir_ptr *)get_element(directories_ptrs, i);	// returns the t_dir_ptr object which contains directory name and DIR *
 		DIR *dir = ptr->directory;
 		if (!dir)
 		{
-			ft_printf("no dir pointer\n");
+			perror("opendir");
 			exit(1);
 		}
 		add_dirent_entries(ls, entries, ptr);	// loops through every entry in the current directory and adds them to entries vector
 		merge_dirent(entries->data, 0, entries->size);
 		ft_printf("%s:\n", ptr->directory_name);
 		rec_directories = alloc_vector(POINTER, 1, false);
-		char *parent_dir = ptr->directory_name;
-		// for (size_t j = 0; j < entries->size; j++)
-		for (size_t j = entries->size; j-- > 0;)
+		// char *parent_dir = ptr->directory_name;
+		for (size_t j = 0; j < entries->size; j++)
 		{
 			struct dirent *elem = (struct dirent *)get_element(entries, j);
-			char *parent_dir_slash = NULL;
-			// ft_printf("parent dir %s\n", parent_dir);
-			if (ft_strncmp(parent_dir, "./", -1) != 0)
-				parent_dir_slash = ft_strjoin(parent_dir, "/");
-			else
-				parent_dir_slash = ft_strdup(parent_dir);
-			char *joined_dir = ft_strjoin(parent_dir_slash, elem->d_name);
-			free(parent_dir_slash);
-			struct stat st;
-			lstat(joined_dir, &st);
-			// printf("directory %s\n", joined_dir);
+			path = build_path(ls, ptr->directory_name, elem);
+			lstat(path, &st);
 			if (ft_strchr(ls->options, 'R'))
 			{
 				if (S_ISDIR(st.st_mode))
 				{
 					// Avoid recursion on "." and ".."
 					if (ft_strncmp(elem->d_name, ".", -1) != 0 && ft_strncmp(elem->d_name, "..", -1) != 0)
-					{
-						if (lstat(joined_dir, &st) == 0)
-						{
-							if (S_ISDIR(st.st_mode))
-							{
-								DIR *open_dir = opendir(joined_dir);
-								if (!dir)
-								{
-									perror("opendir");
-									return ;
-								}
-								t_dir_ptr *rec_ptr = create_tdirptr(joined_dir, open_dir);
-								add_to_vector(rec_directories, rec_ptr, POINTER);
-							}
-						}
-					}
+						add_directory(path, rec_directories);
 				}
 			}
 			lstat(elem->d_name, &st);
@@ -221,7 +256,7 @@ void open_directories(t_ls *ls, t_vector *directories_ptrs)
 				col_written = 0;
 			}
 		}
-		ft_printf("\n");
+		ft_printf("\n\n");
 		open_directories(ls, rec_directories);
 		free_vector(entries);
 		closedir(dir);
