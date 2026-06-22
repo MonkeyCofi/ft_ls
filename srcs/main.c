@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:41 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/21 16:27:47 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/22 11:42:22 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,11 +245,12 @@ void open_directories(t_ls *ls, t_vector *directories_ptrs)
 				ft_printf("\n");
 			}
 			if (S_ISDIR(st.st_mode))
-				col_written += ft_printf("\e[1;34m%-*s\e[0m  ", ptr->longest_filename, elem->d_name);
+				col_written += ft_printf("\e[1;34m%-*s\e[0m", ptr->longest_filename, elem->d_name);
 			else if (st.st_mode & S_IXUSR)
-				col_written += ft_printf("\e[1;32m%-*s\e[0m  ", ptr->longest_filename, elem->d_name);
+				col_written += ft_printf("\e[1;32m%-*s\e[0m", ptr->longest_filename, elem->d_name);
 			else
-				col_written += ft_printf("\e[m%-*s\e[0m  ", ptr->longest_filename, elem->d_name);
+				col_written += ft_printf("\e[m%-*s\e[0m", ptr->longest_filename, elem->d_name);
+			ft_printf("  ");
 			if (ft_strchr(ls->options, 'l'))
 			{
 				ft_printf("\n");
@@ -263,6 +264,7 @@ void open_directories(t_ls *ls, t_vector *directories_ptrs)
 		col_written = 0;
 	}
 }
+
 
 void open_directories_reverse(t_ls *ls, t_vector *pointers)
 {
