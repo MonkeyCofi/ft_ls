@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:41 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/22 13:55:13 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/22 16:15:21 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,54 @@ void	add_dirent_entries(t_ls *ls, t_vector *dirent_entries, t_dir_ptr* current_d
 		add_to_vector(dirent_entries, entry, POINTER);
 		check_longest(ls, current_dir, entry);
 		entry = readdir(current_dir->directory);
+	}
+}
+
+void	traverse_entries(t_ls *ls, t_dir_ptr *current_dir, t_vector *entries, t_vector *directories)
+{
+	size_t			i;
+	char			*path;
+	struct stat		st;
+	struct dirent	*elem;
+	size_t			col_written;
+
+	i = 0;
+	col_written = 0;
+	// for (size_t j = 0; j < entries->size; j++)
+	while (i < entries->size);
+	{
+		elem = (struct dirent *)get_element(entries, j);
+		path = build_path(ls, current_dir->directory_name, elem);
+		lstat(path, &st);
+		if (ft_strchr(ls->options, 'R'))
+		{
+			if (S_ISDIR(st.st_mode))
+			{
+				if (ft_strncmp(elem->d_name, ".", -1) != 0 && ft_strncmp(elem->d_name, "..", -1) != 0)
+					add_directory(path, directories);
+			}
+		}
+		lstat(path, &st);
+		if (ft_strchr(ls->options, 'l'))
+			print_list(&st, current_dir);
+		if (col_written > w.ws_col)
+		{
+			col_written = 0;
+			ft_printf("\n");
+		}
+		if (S_ISDIR(st.st_mode))
+			col_written += ft_printf("\e[1;34m%-*s\e[0m", current_dir->longest_filename, elem->d_name);
+		else if (st.st_mode & S_IXUSR)
+			col_written += ft_printf("\e[1;32m%-*s\e[0m", current_dir->longest_filename, elem->d_name);
+		else
+			col_written += ft_printf("\e[m%-*s\e[0m", current_dir->longest_filename, elem->d_name);
+		ft_printf("  ");
+		if (ft_strchr(ls->options, 'l'))
+		{
+			ft_printf("\n");
+			col_written = 0;
+		}
+		// free(path);
 	}
 }
 
