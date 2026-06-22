@@ -6,11 +6,13 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 11:42:30 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/22 12:59:22 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/22 14:12:48 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-void	exec(char **av, char **envp)
+#include <stddef.h>
+
+void	ls(char **av, char **envp)
 {
 	char	*cmd;
 
@@ -28,5 +30,7 @@ void	exec(char **av, char **envp)
 
 int	main(int ac, char **av, char **envp)
 {
-	exec(av, envp);
+	envp = NULL;
+	ls(av, envp);
+	(void)ac;
 }

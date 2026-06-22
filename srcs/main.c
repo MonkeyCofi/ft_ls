@@ -6,30 +6,12 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:41 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/22 13:04:40 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/22 13:55:13 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-const char *months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-
-t_dir_ptr	*create_tdirptr(char *directory_name, DIR *dir_ptr)
-{
-	t_dir_ptr	*ptr;
-
-	ptr = malloc(sizeof(t_dir_ptr));
-	if (!ptr)
-		return NULL;
-	ptr->directory_name = directory_name;
-	ptr->directory = dir_ptr;
-	ptr->longest_filename = 0;
-	ptr->longest_filesize = 0;
-	ptr->longest_hlsize = 0;
-	ptr->longest_group = 0;
-	ptr->longest_owner = 0;
-	return ptr;
-}
 
 void	initialize_ls(t_ls *ls)
 {
@@ -37,100 +19,6 @@ void	initialize_ls(t_ls *ls)
 	ls->directories = alloc_vector(STRING, 20, true);
 	ls->directory_queue = create_queue();
 	ls->dir_entries = NULL;
-}
-
-void	check_group_owner(struct stat *st, t_dir_ptr *current_dir)
-{
-	struct group	*gw;
-	struct passwd	*pw;
-
-	gw = getgrgid(st->st_gid);
-	pw = getpwuid(st->st_uid);
-	if (pw)
-	{
-		if (ft_strlen(pw->pw_name) > current_dir->longest_owner)
-		current_dir->longest_owner = ft_strlen(pw->pw_name);
-	}
-	if (gw)
-	{
-		if (ft_strlen(gw->gr_name) > current_dir->longest_group)
-			current_dir->longest_group = ft_strlen(gw->gr_name);
-	}
-}
-
-void	add_directory(char *path, t_vector *directory_vector)
-{
-	struct stat	st;
-	DIR			*open_dir;
-	t_dir_ptr	*dir_ptr;
-
-	if (lstat(path, &st) == 0)
-	{
-		if (S_ISDIR(st.st_mode))
-		{
-			open_dir = opendir(path);
-			if (!open_dir)
-			{
-				perror("opendir");
-				return ;
-			}
-			dir_ptr = create_tdirptr(path, open_dir);
-			add_to_vector(directory_vector, dir_ptr, POINTER);
-		}
-	}
-}
-
-char	*build_path(t_ls *ls, const char *directory, struct dirent *entry)
-{
-	char	*path;
-	char	*temp;
-
-	path = ft_strjoin(directory, "/");
-	if (!path)
-	{
-		return (NULL);
-	}
-	temp = path;
-	path = ft_strjoin(path, entry->d_name);
-	if (!path)
-	{
-		return (NULL);
-	}
-	free(temp);
-	(void)ls;
-	return (path);
-}
-
-void	check_longest(t_ls *ls, t_dir_ptr *current_dir, struct dirent *entry)
-{
-	char		*path;
-	char		*itoa_str;
-	struct stat	st;
-
-	path = build_path(ls, current_dir->directory_name, entry);
-	if (lstat(path, &st) == -1)
-	{
-		perror("lstat");
-		exit(1);
-	}
-	itoa_str = NULL;
-	itoa_str = ft_itoa(st.st_size);
-	if (!itoa_str)
-		return ;
-	if (ft_strlen(itoa_str) > current_dir->longest_filesize)
-	current_dir->longest_filesize = ft_strlen(itoa_str);
-	if (ft_strlen(entry->d_name) > current_dir->longest_filename)
-	current_dir->longest_filename = ft_strlen(entry->d_name);
-	free(itoa_str);
-	itoa_str = ft_itoa(st.st_nlink);
-	if (ft_strlen(itoa_str) > current_dir->longest_hlsize)
-		current_dir->longest_hlsize = ft_strlen(itoa_str);
-	if (ft_strchr(ls->options, 'l'))
-	{
-		check_group_owner(&st, current_dir);
-	}
-	free(itoa_str);
-	free(path);
 }
 
 void	add_dirent_entries(t_ls *ls, t_vector *dirent_entries, t_dir_ptr* current_dir)
@@ -149,33 +37,6 @@ void	add_dirent_entries(t_ls *ls, t_vector *dirent_entries, t_dir_ptr* current_d
 		check_longest(ls, current_dir, entry);
 		entry = readdir(current_dir->directory);
 	}
-}
-
-void	print_list(struct stat *st, t_dir_ptr *ptr)
-{
-	mode_t	perms;
-	struct passwd *pw;
-	struct group *grp;
-	struct tm	now_t;
-
-	perms = st->st_mode;
-	pw = getpwuid(st->st_uid);
-	grp = getgrgid(st->st_gid);
-	now_t = *localtime(&st->st_mtime);
-	ft_printf("%c", S_ISDIR(st->st_mode) ? 'd' : '-');
-	ft_printf("%c%c%c", perms & S_IRUSR ? 'r' : '-', perms & S_IWUSR ? 'w' : '-', perms & S_IXUSR ? 'x' : '-');
-	ft_printf("%c%c%c", perms & S_IRGRP ? 'r' : '-', perms & S_IWGRP ? 'w' : '-', perms & S_IXGRP ? 'x' : '-');
-	ft_printf("%c%c%c ", perms & S_IROTH ? 'r' : '-', perms & S_IWOTH ? 'w' : '-', perms & S_IXOTH ? 'x' : '-');
-	ft_printf("%*d ", ptr->longest_hlsize, st->st_nlink);
-	ft_printf("%*s ", ptr->longest_group, grp->gr_name);
-	ft_printf("%*s ", ptr->longest_owner, pw->pw_name);
-	ft_printf("%*d ", ptr->longest_filesize, st->st_size);
-	ft_printf("%s %02d ", months[now_t.tm_mon], now_t.tm_mday);
-	ft_printf("%02d:%02d ", now_t.tm_hour, now_t.tm_min);
-	(void)pw;
-	(void)grp;
-	(void)now_t;
-	(void)ptr;
 }
 
 /**
@@ -247,7 +108,7 @@ void open_directories(t_ls *ls, t_vector *directories_ptrs)
 				ft_printf("\n");
 				col_written = 0;
 			}
-			free(path);
+			// free(path);
 		}
 		ft_printf("\n\n");
 		open_directories(ls, rec_directories);
@@ -353,29 +214,6 @@ void open_directories_reverse(t_ls *ls, t_vector *pointers)
 		open_directories(ls, rec_directories);
 		free_vector(entries);
 		closedir(dir);
-	}
-}
-
-void	add_arg_directories(t_ls *ls, t_vector *directory_vector)
-{
-	char		*current_path;
-	DIR			*ptr;
-	t_dir_ptr	*dir_ptr;
-	struct stat	st;
-
-	current_path = NULL;
-	for (size_t i = 0; i < ls->directories->size; i++)
-	{
-		current_path = (char *)get_element(ls->directories, i);
-		lstat(current_path, &st);
-		if (S_ISDIR(st.st_mode))
-		{
-			ptr = opendir(current_path);
-			dir_ptr = create_tdirptr(current_path, ptr);
-			add_to_vector(directory_vector, dir_ptr, POINTER);
-		}
-		else
-			printf("failed %s\n", get_element(ls->directories, i));
 	}
 }
 

@@ -10,7 +10,8 @@ SRCS_DIR := ./srcs
 
 OBJS_DIR := ./objs
 
-SRCS := $(addprefix $(SRCS_DIR)/, queue.c parser.c vector.c vector_utils.c mergesort.c main.c)
+SRCS := $(addprefix $(SRCS_DIR)/, queue.c parser.c vector.c vector_utils.c mergesort.c list.c utils.c \
+queue_utils.c directories.c main.c)
 
 OBJS := $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 

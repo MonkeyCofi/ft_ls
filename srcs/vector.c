@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 21:05:03 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/18 14:38:21 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/22 14:03:08 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,22 @@
 size_t	get_data_size(t_data_type data_type)
 {
 	if (data_type == INTEGER)
-		return sizeof(int);
+		return (sizeof(int));
 	else if (data_type == STRING)
 		return (sizeof(char *));
 	else if (data_type == POINTER)
 		return (sizeof(void *));
-	return -1;
+	return (-1);
 }
 
 /**
  * @brief Allocates space for a vector and initializes its results
  * @param data_type The type of data the vector will store
- * @param element_count The amount of elements to account for when reserving space
+ * @param element_count The amount of elements to
+ * 				account for when reserving space
  * @return The allocated vector
 */
-t_vector	*alloc_vector(t_data_type data_type, size_t element_count, bool should_free)
+t_vector	*alloc_vector(t_data_type data_type, size_t count, bool should_free)
 {
 	size_t		memb_size;
 	t_vector	*vector;
@@ -46,16 +47,16 @@ t_vector	*alloc_vector(t_data_type data_type, size_t element_count, bool should_
 	vector->data_type = data_type;
 	vector->size = 0;
 	vector->should_free = should_free;
-	if (element_count)
-		vector->capacity = element_count * memb_size;
+	if (count)
+		vector->capacity = count * memb_size;
 	else
 		vector->capacity = memb_size;
 	vector->data = malloc(vector->capacity);
 	vector->member_size = memb_size;
 	if (!vector->data)
-		return NULL;
+		return (NULL);
 	ft_memset(vector->data, 0, vector->capacity);
-	return vector;
+	return (vector);
 }
 
 /**
@@ -76,12 +77,12 @@ t_vector	non_alloc_vector(t_data_type data_type, size_t size)
 	{
 		vector.capacity = -1;
 		vector.size = -1;
-		return vector;
+		return (vector);
 	}
 	ft_memset(vector.data, 0, vector.capacity);
 	vector.size = 0;
 	vector.member_size = member_size;
-	return vector;
+	return (vector);
 }
 
 /**
@@ -92,23 +93,26 @@ t_vector	non_alloc_vector(t_data_type data_type, size_t size)
  * @return Nothinng
  * @e
 */
-void	add_to_vector(t_vector * vector, void *element, t_data_type data_type)
+void	add_to_vector(t_vector *vector, void *element, t_data_type data_type)
 {
 	if (vector->member_size * vector->size >= vector->capacity)
 		resize(vector, vector->capacity * 2);
 	if (data_type == STRING || data_type == POINTER)
-		ft_memmove(vector->data + (vector->size * vector->member_size), &element, vector->member_size);
+		ft_memmove(vector->data + (vector->size * vector->member_size), \
+&element, vector->member_size);
 	else
-		ft_memmove(vector->data + (vector->size * vector->member_size), element, vector->member_size);
+		ft_memmove(vector->data + (vector->size * vector->member_size), \
+element, vector->member_size);
 	vector->size++;
 }
 
 /**
- * @brief Frees the vector and the elements inside it if they are allocated addresses
+ * @brief Frees the vector and the elements inside it 
+ * 			if they are allocated addresses
  * @param vector The vector to free
  * @return Nothing
 */
-void	free_vector(t_vector* vector)
+void	free_vector(t_vector *vector)
 {
 	size_t	i;
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   queue.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:14 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/18 14:28:34 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/22 14:05:54 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
  * @param node The node to add to the front of the queue
  * @return Nothing
 */
-void    enqueue_front(t_queue *queue, t_queue_node *node)
+void	enqueue_front(t_queue *queue, t_queue_node *node)
 {
 	queue->size++;
 	if (is_empty(queue))
@@ -41,8 +41,8 @@ void    enqueue_front(t_queue *queue, t_queue_node *node)
 bool	is_empty(t_queue *queue)
 {
 	if (queue->front == NULL)
-		return true;
-	return false;
+		return (true);
+	return (false);
 }
 
 /**
@@ -66,7 +66,8 @@ void	enqueue_back(t_queue *queue, t_queue_node *node)
 }
 
 /**
- * @brief Creates a dynamically allocated node and points the data attribute to data passed
+ * @brief Creates a dynamically allocated node and
+ * 		points the data attribute to data passed
  * @param data The data to pass to the node
  * @return The malloc'd node
 */
@@ -76,12 +77,12 @@ t_queue_node	*create_queue_node(void *data, bool alloc_data)
 
 	new = malloc(sizeof(t_queue_node));
 	if (!new)
-		return NULL;
+		return (NULL);
 	new->data = data;
 	new->prev = NULL;
 	new->next = NULL;
 	new->alloc_data = alloc_data;
-	return new;
+	return (new);
 }
 
 /**
@@ -89,7 +90,7 @@ t_queue_node	*create_queue_node(void *data, bool alloc_data)
  * @param queue The queue object
  * @return Nothing
 */
-void	free_queue(t_queue* queue)
+void	free_queue(t_queue *queue)
 {
 	t_queue_node	*trav;
 	t_queue_node	*temp;
@@ -110,47 +111,15 @@ void	free_queue(t_queue* queue)
  * @brief Dynamically allocates the queue object
  * @return The dynamically allocated queue
 */
-t_queue	*create_queue()
+t_queue	*create_queue(void)
 {
 	t_queue	*queue;
-	
+
 	queue = malloc(sizeof(t_queue));
 	if (!queue)
-		return NULL;
+		return (NULL);
 	ft_memset(queue, 0, sizeof(t_queue));
-	return queue;
-}
-
-void	print_queue_front(t_queue *queue)
-{
-	t_queue_node	*front;
-	struct dirent	*node_data;
-
-	front = queue->front;
-	while (front)
-	{
-		node_data = front->data;
-		ft_printf("%s\n", node_data->d_name);
-		front = front->next;
-	}
-}
-
-void	print_queue_back(t_queue *queue)
-{
-	t_queue_node	*trav;
-	struct dirent	*node_data;
-	t_queue_node	*front;
-
-	trav = queue->rear;
-	front = queue->front;
-	while (trav != front)
-	{
-		node_data = trav->data;
-		ft_printf("%s\n", node_data->d_name);
-		trav = trav->prev;
-	}
-	node_data = trav->data;
-	ft_printf("%s\n", node_data->d_name);
+	return (queue);
 }
 
 t_queue_node	*peek_front(t_queue *queue)
@@ -163,14 +132,10 @@ t_queue_node	*peek_rear(t_queue *queue)
 	return (queue->rear);
 }
 
-void	pop_front(t_queue* queue)
+void	pop_front(t_queue *queue)
 {
 	t_queue_node	*temp;
-	/*
-		take the current front node in a temp variable
-		set queue->front to be queue->front->next
-		set queue->front->prev to be NULL
-	*/
+
 	temp = queue->front;
 	queue->front = temp->next;
 	if (temp->alloc_data)

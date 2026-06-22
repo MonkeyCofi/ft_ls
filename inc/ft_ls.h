@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ls.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:24 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/19 20:11:23 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/22 13:47:12 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,24 @@ typedef struct s_dir_ptr
 	DIR		*directory;
 }	t_dir_ptr;
 
+void	check_group_owner(struct stat *st, t_dir_ptr *current_dir);
 void    mergesort_string(char **array, int start, int end);
 void    merge_dirent(struct dirent **entries, int start, int end);
 void    merge_directories(t_dir_ptr **dir_ptrs, int start, int end);
+char	*build_path(t_ls *ls, const char *directory, struct dirent *entry);
+
+/*************************/
+/*		Directories		 */ 
+/*************************/
+t_dir_ptr	*create_tdirptr(char *directory_name, DIR *dir_ptr);
+void	add_directory(char *path, t_vector *directory_vector);
+void	add_arg_directories(t_ls *ls, t_vector *directory_vector);
+
+/*************************/
+/*			List		 */ 
+/*************************/
+void	check_longest(t_ls *ls, t_dir_ptr *current_dir, struct dirent *entry);
+void	print_list(struct stat *st, t_dir_ptr *ptr);
+
 
 #endif
