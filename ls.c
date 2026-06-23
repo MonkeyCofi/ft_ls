@@ -1,4 +1,4 @@
-/* ************************************************************************** */
+  /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   test.c                                             :+:      :+:    :+:   */
@@ -11,8 +11,10 @@
 /* ************************************************************************** */
 
 #include <stddef.h>
+#include <stdio.h>
+#include <stdbool.h>
 
-void	ls(char **av, char **envp)
+void	ft_ls(char **av, char **envp)
 {
 	char	*cmd;
 
@@ -31,6 +33,6 @@ void	ls(char **av, char **envp)
 int	main(int ac, char **av, char **envp)
 {
 	envp = NULL;
-	ls(av, envp);
+	ft_ls(av, envp);
 	(void)ac;
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   directories.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:53 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/22 13:57:48 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/23 14:34:29 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,5 +73,45 @@ void	add_arg_directories(t_ls *ls, t_vector *directory_vector)
 		}
 		else
 			printf("failed %s\n", get_element(ls->directories, i));
+	}
+}
+
+/**
+ * @param ls The ls struct
+ * @param pointers Vector cointaing DIR *
+ */
+void open_directories(t_ls *ls, t_vector *directories_ptrs)
+{
+	t_vector		*rec_directories;
+	t_dir_ptr		*ptr;
+	t_vector		*entries;
+	DIR				*dir;
+
+	if (directories_ptrs->size == 0)
+		return ;
+	rec_directories = NULL;
+	for (size_t i = 0; i < directories_ptrs->size; i++)
+	{
+		entries = alloc_vector(POINTER, 1, false);
+		ptr = (t_dir_ptr *)get_element(directories_ptrs, i);	// returns the t_dir_ptr object which contains directory name and DIR *
+		dir = ptr->directory;
+		if (!dir)
+		{
+			perror("opendir");
+			exit(1);
+		}
+		add_dirent_entries(ls, entries, ptr);	// loops through every entry in the current directory and adds them to entries vector
+		merge_dirent(entries->data, 0, entries->size);
+		if (ls->no_args == false)
+			ft_printf("%s:\n", ptr->directory_name);
+		rec_directories = alloc_vector(POINTER, 1, true);
+		traverse_entries(ls, ptr, entries, rec_directories);
+		ft_printf("\n");
+		if (ls->no_args == false)
+			ft_printf("\n");
+		open_directories(ls, rec_directories);
+		free_vector(entries);
+		free_vector(rec_directories);
+		closedir(dir);
 	}
 }

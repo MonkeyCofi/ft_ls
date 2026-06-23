@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:05 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/22 13:55:01 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/23 14:32:53 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,10 @@ char	*build_path(t_ls *ls, const char *directory, struct dirent *entry)
 	char	*path;
 	char	*temp;
 
-	path = ft_strjoin(directory, "/");
+	if (ft_strncmp(directory, "./", -1) == 0)
+		path = ft_strdup(directory);
+	else
+		path = ft_strjoin(directory, "/");
 	if (!path)
 	{
 		return (NULL);
@@ -30,7 +33,7 @@ char	*build_path(t_ls *ls, const char *directory, struct dirent *entry)
 	}
 	free(temp);
 	(void)ls;
-    (void)temp;
+	(void)temp;
 	return (path);
 }
 
@@ -51,4 +54,25 @@ void	check_group_owner(struct stat *st, t_dir_ptr *current_dir)
 		if (ft_strlen(gw->gr_name) > current_dir->longest_group)
 			current_dir->longest_group = ft_strlen(gw->gr_name);
 	}
+}
+
+bool	multiple_col_print(t_ls *ls, t_vector *entries, struct winsize *w)
+{
+	size_t			i;
+	size_t			size;
+	size_t			count;
+	struct dirent	*element;
+
+	i = -1;
+	size = entries->size;
+	count = 0;
+	while (++i < size)
+	{
+		element = (struct dirent *)get_element(entries, i);
+		count += ft_strlen(element->d_name);
+		if (count >= w->ws_col)
+			return true;
+	}
+	(void)ls;
+	return false;
 }

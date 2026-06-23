@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 20:55:17 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/18 17:05:11 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/23 13:31:56 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,9 @@ void    parse_cli(char **args, int arg_count, t_ls *ls)
 		if (ls->exit_code == 2)
 			return ;
 		if (args[i][0] == '-')
+		{
 			parse_options(args[i], ls);
+		}
 		else
 		{
 			dup_str = ft_strdup(args[i]);
@@ -104,10 +106,13 @@ void    parse_cli(char **args, int arg_count, t_ls *ls)
 	// if the queue is empty, add the current directory to the queue
 	if (is_empty(ls->directory_queue))
 	{
+		ls->no_args = true;
 		dup_str = ft_strdup("./");
 		new = create_queue_node(dup_str, true);
 		enqueue_back(ls->directory_queue, new);
 	}
+	if (ls->no_args == true && ft_strchr(ls->options, 'R'))
+		ls->no_args = false;
 	(void)arg_count;
 }
 
