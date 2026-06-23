@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   files.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 14:33:44 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/23 14:37:57 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/23 16:32:45 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ void	traverse_entries(t_ls *ls, t_dir_ptr *dir, t_vector *entries, t_vector *dir
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 	path = NULL;
 	ls->multiple_columns = multiple_col_print(ls, entries, &w);
+	lstat(dir->directory_name, &st);
+	ft_printf("%s total %d\n", dir->directory_name, st.st_size);
 	while (++i < entries->size)
 	{
 		elem = (struct dirent *)get_element(entries, i);

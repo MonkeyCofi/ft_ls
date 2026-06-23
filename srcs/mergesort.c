@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mergesort.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/15 20:43:18 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/18 17:59:45 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/23 16:19:47 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,6 @@
 #include <string.h>
 #include <dirent.h>
 
-// Merges two sorted subarrays into a temporary array, then copies back.
-// Left subarray is array[start..middle]
-// Right subarray is array[middle+1..end]
 static void merge(char **array, int start, int middle, int end)
 {
     int i;
@@ -56,13 +53,6 @@ static void merge(char **array, int start, int middle, int end)
     free(right_arr);
 }
 
-/*
-	this is a recursive function that would keep calling itself on subarrays
-	of the main array
-	
-	It takes three parameters: the array, the starting index, and the ending index
-	
-*/
 void    mergesort_string(char **array, int start, int end)
 {
 	int     middle;
@@ -73,12 +63,8 @@ void    mergesort_string(char **array, int start, int end)
 	mergesort_string(array, start, middle);
 	mergesort_string(array, middle, end);
 	merge(array, start, middle, end); 
-	// mergeArrays(array, start, middle, end);    // mergeArrays(array, element_size, start1, end1, start2, end2)
 }
 
-// Merges two sorted subarrays into a temporary array, then copies back.
-// Left subarray is array[start..middle]
-// Right subarray is array[middle+1..end]
 static void merger_dirent(struct dirent **array, int start, int middle, int end)
 {
     int i;
@@ -133,10 +119,9 @@ void    merge_dirent(struct dirent **entries, int start, int end)
 	merge_dirent(entries, start, middle);
 	merge_dirent(entries, middle, end);
 	merger_dirent(entries, start, middle, end); 
-	// mergeArrays(array, start, middle, end);    // mergeArrays(array, element_size, start1, end1, start2, end2)
 }
 
-static void merger_dir_ptrs(t_dir_ptr **array, int start, int middle, int end)
+static void merge_dir_vectors(t_dir_ptr **array, int start, int middle, int end)
 {
     int i;
 	int	j;
@@ -182,6 +167,5 @@ void    merge_directories(t_dir_ptr **dir_ptrs, int start, int end)
 	middle = start + (end - start) / 2;
 	merge_directories(dir_ptrs, start, middle);
 	merge_directories(dir_ptrs, middle, end);
-	merger_dir_ptrs(dir_ptrs, start, middle, end); 
-	// mergeArrays(array, start, middle, end);    // mergeArrays(array, element_size, start1, end1, start2, end2)
+	merge_dir_vectors(dir_ptrs, start, middle, end);
 }

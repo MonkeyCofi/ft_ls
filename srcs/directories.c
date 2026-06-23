@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   directories.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:53 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/23 14:39:24 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/23 16:25:19 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,29 +80,25 @@ void	add_arg_directories(t_ls *ls, t_vector *directory_vector)
  * @param ls The ls struct
  * @param pointers Vector cointaing DIR *
  */
-void open_directories(t_ls *ls, t_vector *directories)
+void	open_directories(t_ls *ls, t_vector *directories)
 {
-	DIR				*dir;
 	size_t			i;
 	t_vector		*rec_directories;
 	t_vector		*entries;
 	t_dir_ptr		*ptr;
 
-	if (directories->size == 0)
-		return ;
 	rec_directories = NULL;
 	i = -1;
 	while (++i < directories->size)
 	{
 		entries = alloc_vector(POINTER, 1, false);
-		ptr = (t_dir_ptr *)get_element(directories, i);	// returns the t_dir_ptr object which contains directory name and DIR *
-		dir = ptr->directory;
-		if (!dir)
+		ptr = (t_dir_ptr *)get_element(directories, i);
+		if (!ptr->directory)
 		{
 			perror("opendir");
-			exit(1);
+			return ;
 		}
-		add_dirent_entries(ls, entries, ptr);	// loops through every entry in the current directory and adds them to entries vector
+		add_dirent_entries(ls, entries, ptr);
 		merge_dirent(entries->data, 0, entries->size);
 		if (ls->no_args == false)
 			ft_printf("%s:\n", ptr->directory_name);
@@ -114,6 +110,6 @@ void open_directories(t_ls *ls, t_vector *directories)
 		open_directories(ls, rec_directories);
 		free_vector(entries);
 		free_vector(rec_directories);
-		closedir(dir);
+		closedir(ptr->directory);
 	}
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   list.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:18:36 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/23 13:09:04 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/23 16:30:05 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	check_longest(t_ls *ls, t_dir_ptr *current_dir, struct dirent *entry)
 	path = build_path(ls, current_dir->directory_name, entry);
 	if (lstat(path, &st) == -1)
 	{
-		ft_printf("%s ", path);
 		perror("lstat");
 		return ;
 	}
