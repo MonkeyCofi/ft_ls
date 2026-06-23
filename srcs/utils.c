@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:05 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/23 14:32:53 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/23 14:40:31 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*build_path(t_ls *ls, const char *directory, struct dirent *entry)
 	char	*path;
 	char	*temp;
 
-	if (ft_strncmp(directory, "./", -1) == 0)
+	if (!ft_strncmp(directory, "./", -1) || !ft_strncmp(directory, "../", -1))
 		path = ft_strdup(directory);
 	else
 		path = ft_strjoin(directory, "/");

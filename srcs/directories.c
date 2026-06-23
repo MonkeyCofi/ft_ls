@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:53 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/23 14:34:29 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/23 14:39:24 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,20 +80,22 @@ void	add_arg_directories(t_ls *ls, t_vector *directory_vector)
  * @param ls The ls struct
  * @param pointers Vector cointaing DIR *
  */
-void open_directories(t_ls *ls, t_vector *directories_ptrs)
+void open_directories(t_ls *ls, t_vector *directories)
 {
-	t_vector		*rec_directories;
-	t_dir_ptr		*ptr;
-	t_vector		*entries;
 	DIR				*dir;
+	size_t			i;
+	t_vector		*rec_directories;
+	t_vector		*entries;
+	t_dir_ptr		*ptr;
 
-	if (directories_ptrs->size == 0)
+	if (directories->size == 0)
 		return ;
 	rec_directories = NULL;
-	for (size_t i = 0; i < directories_ptrs->size; i++)
+	i = -1;
+	while (++i < directories->size)
 	{
 		entries = alloc_vector(POINTER, 1, false);
-		ptr = (t_dir_ptr *)get_element(directories_ptrs, i);	// returns the t_dir_ptr object which contains directory name and DIR *
+		ptr = (t_dir_ptr *)get_element(directories, i);	// returns the t_dir_ptr object which contains directory name and DIR *
 		dir = ptr->directory;
 		if (!dir)
 		{

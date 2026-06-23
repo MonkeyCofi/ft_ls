@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 14:33:44 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/23 14:34:53 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/23 14:37:57 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,24 @@ void	print_file(t_ls *ls, t_dir_ptr *dir, struct dirent *elem, struct stat *st)
 	if (S_ISDIR(st->st_mode))
 	{
 		if (ls->multiple_columns)
-			ls->columns_written += ft_printf("\e[1;34m%-*s\e[0m", dir->longest_filename, elem->d_name);
+			ls->columns_written += ft_printf("\e[1;34m%-*s\e[0m", \
+                dir->longest_filename, elem->d_name);
 		else
 			ls->columns_written += ft_printf("%s", elem->d_name);
 	}
 	else if (st->st_mode & S_IXUSR)
 	{
 		if (ls->multiple_columns)
-			ls->columns_written += ft_printf("\e[1;32m%-*s\e[0m", dir->longest_filename, elem->d_name);
+			ls->columns_written += ft_printf("\e[1;32m%-*s\e[0m", \
+                dir->longest_filename, elem->d_name);
 		else
 			ls->columns_written += ft_printf("%s", elem->d_name);
 	}
 	else
 	{
 		if (ls->multiple_columns)
-			ls->columns_written += ft_printf("\e[m%-*s\e[0m", dir->longest_filename, elem->d_name);
+			ls->columns_written += ft_printf("\e[m%-*s\e[0m", \
+                dir->longest_filename, elem->d_name);
 		else
 			ls->columns_written += ft_printf("%s", elem->d_name);
 	}
