@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 20:55:17 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/23 13:31:56 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/24 20:45:24 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,43 +30,19 @@ void    parse_options(char *str, t_ls *ls)
 			// return error
 		if (ft_strchr(OPTIONS, str[i]) && !ft_strchr(ls->options, str[i]))
 			ls->options[(*opt_count)++] = str[i];
+		if (str[i] == 'r')
+			ls->reverse = true;
+		else if (str[i] == 't')
+			ls->time = true;
+		else if (str[i] == 'l')
+			ls->list = true;
+		else if (str[i] == 'a')
+			ls->all = true;
+		else if (str[i] == 'R')
+			ls->recursive = true;
 		i++;
 	}
 }
-
-
-/**
- * @brief Parses program's arguments and sets t_ls struct. if ls->exit code is 2, stops parsing and just exits the function
- * @param args The command line arguments
- * @param arg_count The count of the arguments
- * @return Nothing
-*/
-// void    parse_cli(char **args, int arg_count, t_ls *ls)
-// {
-// 	/*
-// 		detect if "-" is present in every string
-// 		if detected, parse the option
-// 			set the option in the ls struct
-// 	*/
-// 	int i;
-// 	int	*directory_indices;
-	
-// 	i = 1;
-// 	directory_indices = malloc(sizeof(int) * arg_count);
-// 	while (args[i])
-// 	{
-// 		if (ls->exit_code == 2)
-// 			return ;
-// 		if (args[i][0] == '-')
-// 			parse_options(args[i], ls);
-// 		else
-// 			directory_indices[ls->directory_count++] = i;
-// 		i++;
-// 	}
-// 	add_directories(ls, args, directory_indices);
-// 	free(directory_indices);
-// 	(void)arg_count;
-// }
 
 /**
  * @brief Parses the command line input and acccounts for options
@@ -77,11 +53,6 @@ void    parse_options(char *str, t_ls *ls)
 */
 void    parse_cli(char **args, int arg_count, t_ls *ls)
 {
-	/*
-		detect if "-" is present in every string
-		if detected, parse the option
-			set the option in the ls struct
-	*/
 	int 			i;
 	t_queue_node	*new;
 	char			*dup_str;

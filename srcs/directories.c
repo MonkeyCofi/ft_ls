@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:53 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/23 16:25:19 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/24 20:45:51 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,24 +82,25 @@ void	add_arg_directories(t_ls *ls, t_vector *directory_vector)
  */
 void	open_directories(t_ls *ls, t_vector *directories)
 {
-	size_t			i;
 	t_vector		*rec_directories;
 	t_vector		*entries;
 	t_dir_ptr		*ptr;
+	size_t			temp;
 
 	rec_directories = NULL;
-	i = -1;
-	while (++i < directories->size)
+	temp = ls->trav_i;
+	set_index(ls, directories->size);
+	while (looper(ls, directories->size))
 	{
 		entries = alloc_vector(POINTER, 1, false);
-		ptr = (t_dir_ptr *)get_element(directories, i);
+		ptr = (t_dir_ptr *)get_element(directories, ls->trav_i);
 		if (!ptr->directory)
 		{
 			perror("opendir");
 			return ;
 		}
 		add_dirent_entries(ls, entries, ptr);
-		merge_dirent(entries->data, 0, entries->size);
+		merge_dirent(entries->data, 0, entries->size, ls->time);
 		if (ls->no_args == false)
 			ft_printf("%s:\n", ptr->directory_name);
 		rec_directories = alloc_vector(POINTER, 1, true);
@@ -112,4 +113,5 @@ void	open_directories(t_ls *ls, t_vector *directories)
 		free_vector(rec_directories);
 		closedir(ptr->directory);
 	}
+	ls->trav_i = temp;
 }

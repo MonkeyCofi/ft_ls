@@ -11,7 +11,7 @@ SRCS_DIR := ./srcs
 OBJS_DIR := ./objs
 
 SRCS := $(addprefix $(SRCS_DIR)/, queue.c parser.c vector.c vector_utils.c mergesort.c list.c utils.c \
-queue_utils.c directories.c  files.c main.c)
+queue_utils.c directories.c  files.c ls.c main.c)
 
 OBJS := $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 
@@ -31,7 +31,6 @@ $(NAME): $(LIBFT) $(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) -L$(LIBFT_DIR) -lft -o $(NAME)
 
 clean:
-	echo $(OBJS)
 	make -C $(LIBFT_DIR) clean
 	rm -f $(OBJS)
 

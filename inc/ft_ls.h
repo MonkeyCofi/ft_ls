@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ls.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:24 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/23 14:35:49 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/24 20:33:26 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,17 @@ typedef struct s_ls
 	size_t		option_count;
 	size_t		columns_written;
 	char		options[OPTION_COUNT + 1];
+	bool		reverse;
+	bool		time;
+	bool		all;
+	bool		recursive;
+	bool		list;
 	bool		no_args;
 	bool		multiple_columns;
 	int			directory_count;
 	int			exit_code;
 	int			error_code;
+	size_t		trav_i;
 }   t_ls;
 
 typedef struct s_dir_ptr
@@ -69,7 +75,7 @@ typedef struct s_dir_ptr
 
 void		check_group_owner(struct stat *st, t_dir_ptr *current_dir);
 void    	mergesort_string(char **array, int start, int end);
-void    	merge_dirent(struct dirent **entries, int start, int end);
+void    	merge_dirent(struct dirent **entries, int start, int end, bool time_sort);
 void    	merge_directories(t_dir_ptr **dir_ptrs, int start, int end);
 char		*build_path(t_ls *ls, const char *directory, struct dirent *entry);
 bool		multiple_col_print(t_ls *ls, t_vector *entries, struct winsize *w);
@@ -94,5 +100,8 @@ void 		open_directories(t_ls *ls, t_vector *directories_ptrs);
 void		check_longest(t_ls *ls, t_dir_ptr *current_dir, struct dirent *entry);
 void		print_list(struct stat *st, t_dir_ptr *ptr);
 
+bool		looper(t_ls *ls, size_t max);
+void    	set_index(t_ls *ls, size_t max);
+void		initialize_ls(t_ls *ls);
 
 #endif

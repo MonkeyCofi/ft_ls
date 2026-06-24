@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 14:33:44 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/23 18:53:31 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/24 20:46:21 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,20 +43,20 @@ void	print_file(t_ls *ls, t_dir_ptr *dir, struct dirent *elem, struct stat *st)
 void	traverse_entries(t_ls *ls, t_dir_ptr *dir, t_vector *entries, t_vector *directories)
 {
 	char			*path;
-	size_t			i;
+	size_t			temp;
 	struct stat		st;
 	struct dirent	*elem;
 	struct winsize	w;
 	
-	i = -1;
+	temp = ls->trav_i;
+	set_index(ls, entries->size);
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
 	path = NULL;
 	ls->multiple_columns = multiple_col_print(ls, entries, &w);
 	lstat(dir->directory_name, &st);
-	// ft_printf("%s total %d\n", dir->directory_name, st.st_size);
-	while (++i < entries->size)
+	while (looper(ls, entries->size))
 	{
-		elem = (struct dirent *)get_element(entries, i);
+		elem = (struct dirent *)get_element(entries, ls->trav_i);
 		path = build_path(ls, dir->directory_name, elem);
 		lstat(path, &st);
 		if (ft_strchr(ls->options, 'R'))
@@ -87,6 +87,7 @@ void	traverse_entries(t_ls *ls, t_dir_ptr *dir, t_vector *entries, t_vector *dir
 	}
 	ls->multiple_columns = false;
 	ls->columns_written = 0;
+	ls->trav_i = temp;
 }
 
 void	add_dirent_entries(t_ls *ls, t_vector *dirent_entries, t_dir_ptr* current_dir)
@@ -96,7 +97,7 @@ void	add_dirent_entries(t_ls *ls, t_vector *dirent_entries, t_dir_ptr* current_d
 	entry = readdir(current_dir->directory);
 	while (entry)
 	{
-		if (entry->d_name[0] == '.' && !ft_strchr(ls->options, 'a'))
+		if (entry->d_name[0] == '.' && ls->all == false)
 		{
 			entry = readdir(current_dir->directory);
 			continue;

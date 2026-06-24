@@ -3,23 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:41 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/23 14:34:47 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/24 20:44:47 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
-
-
-void	initialize_ls(t_ls *ls)
-{
-	ft_memset(ls, 0, sizeof(t_ls));
-	ls->directories = alloc_vector(STRING, 20, true);
-	ls->directory_queue = create_queue();
-	ls->dir_entries = NULL;
-}
 
 int main(int ac, char **av)
 {
@@ -47,10 +38,7 @@ int main(int ac, char **av)
 	mergesort_string(ls.directories->data, 0, ls.directories->size);
 	directories = alloc_vector(POINTER, ls.directories->size, true);
 	add_arg_directories(&ls, directories);
-	if (ft_strchr(ls.options, 'r') == NULL)
-		open_directories(&ls, directories);
-	// else
-	// 	open_directories_reverse(&ls, directories);
+	open_directories(&ls, directories);
 	free_queue(ls.directory_queue);
 	free_vector(directories);
 	free_vector(ls.directories);
