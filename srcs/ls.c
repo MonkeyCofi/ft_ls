@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/24 20:20:50 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/24 20:45:12 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/24 20:57:34 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,10 @@ void	initialize_ls(t_ls *ls)
 
 void    set_index(t_ls *ls, size_t max)
 {
-    ls->trav_i = (size_t)-1;
     if (ls->reverse)
+    {
         ls->trav_i = max;
+        return ;
+    }
+    ls->trav_i = (size_t)-1;
 }

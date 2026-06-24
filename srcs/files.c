@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 14:33:44 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/24 20:46:21 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/24 21:32:32 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	print_file(t_ls *ls, t_dir_ptr *dir, struct dirent *elem, struct stat *st)
 	}
 }
 
-void	traverse_entries(t_ls *ls, t_dir_ptr *dir, t_vector *entries, t_vector *directories)
+void	traverse_entries(t_ls *ls, t_dir_ptr *dir, t_vector *entries, t_vector **directories)
 {
 	char			*path;
 	size_t			temp;
@@ -59,16 +59,16 @@ void	traverse_entries(t_ls *ls, t_dir_ptr *dir, t_vector *entries, t_vector *dir
 		elem = (struct dirent *)get_element(entries, ls->trav_i);
 		path = build_path(ls, dir->directory_name, elem);
 		lstat(path, &st);
-		if (ft_strchr(ls->options, 'R'))
+		if (ls->recursive)
 		{
 			if (S_ISDIR(st.st_mode))
 			{
 				if (ft_strncmp(elem->d_name, ".", -1) != 0 && ft_strncmp(elem->d_name, "..", -1) != 0)
-					add_directory(path, directories);
+					add_directory(path, *directories);
 			}
 		}
 		lstat(path, &st);
-		if (ft_strchr(ls->options, 'l'))
+		if (ls->list)
 			print_list(&st, dir);
 		if (ls->columns_written > w.ws_col)
 		{
@@ -82,8 +82,7 @@ void	traverse_entries(t_ls *ls, t_dir_ptr *dir, t_vector *entries, t_vector *dir
 			ft_printf("\n");
 			ls->columns_written = 0;
 		}
-		// free(path);
-		// path = NULL;
+		free(path);
 	}
 	ls->multiple_columns = false;
 	ls->columns_written = 0;

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:53 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/24 20:45:51 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/24 21:34:29 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ t_dir_ptr	*create_tdirptr(char *directory_name, DIR *dir_ptr)
 
 void	add_directory(char *path, t_vector *directory_vector)
 {
+	char		*directory;
 	struct stat	st;
 	DIR			*open_dir;
 	t_dir_ptr	*dir_ptr;
@@ -45,13 +46,18 @@ void	add_directory(char *path, t_vector *directory_vector)
 				perror("opendir");
 				return ;
 			}
-			dir_ptr = create_tdirptr(path, open_dir);
+			directory = ft_strdup(path);
+			if (!directory)
+			{
+				return ;
+			}
+			dir_ptr = create_tdirptr(directory, open_dir);
 			add_to_vector(directory_vector, dir_ptr, POINTER);
 		}
 	}
 }
 
-void	add_arg_directories(t_ls *ls, t_vector *directory_vector)
+void	add_arg_directories(t_ls *ls, t_vector **directory_vector)
 {
 	char		*current_path;
 	DIR			*ptr;
@@ -104,7 +110,7 @@ void	open_directories(t_ls *ls, t_vector *directories)
 		if (ls->no_args == false)
 			ft_printf("%s:\n", ptr->directory_name);
 		rec_directories = alloc_vector(POINTER, 1, true);
-		traverse_entries(ls, ptr, entries, rec_directories);
+		traverse_entries(ls, ptr, entries, &rec_directories);
 		ft_printf("\n");
 		if (ls->no_args == false)
 			ft_printf("\n");
