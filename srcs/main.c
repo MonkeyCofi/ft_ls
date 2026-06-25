@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:41 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/24 21:34:38 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/25 15:58:04 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int main(int ac, char **av)
 	mergesort_string(ls.directories->data, 0, ls.directories->size);
 	directories = alloc_vector(POINTER, ls.directories->size, true);
 	add_arg_directories(&ls, &directories);
-	open_directories(&ls, directories);
+	open_directories(&ls, &directories);
 	free_vector(directories);
 	free_queue(ls.directory_queue);
 	free_vector(ls.directories);

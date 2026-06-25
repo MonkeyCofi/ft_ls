@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:53 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/24 21:34:29 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/25 16:13:20 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ void	add_arg_directories(t_ls *ls, t_vector **directory_vector)
 		{
 			ptr = opendir(current_path);
 			dir_ptr = create_tdirptr(current_path, ptr);
-			add_to_vector(directory_vector, dir_ptr, POINTER);
+			add_to_vector(*directory_vector, dir_ptr, POINTER);
 		}
 		else
 			printf("failed %s\n", get_element(ls->directories, i));
@@ -86,7 +86,7 @@ void	add_arg_directories(t_ls *ls, t_vector **directory_vector)
  * @param ls The ls struct
  * @param pointers Vector cointaing DIR *
  */
-void	open_directories(t_ls *ls, t_vector *directories)
+void	open_directories(t_ls *ls, t_vector **directories)
 {
 	t_vector		*rec_directories;
 	t_vector		*entries;
@@ -95,11 +95,11 @@ void	open_directories(t_ls *ls, t_vector *directories)
 
 	rec_directories = NULL;
 	temp = ls->trav_i;
-	set_index(ls, directories->size);
-	while (looper(ls, directories->size))
+	set_index(ls, (*directories)->size);
+	while (looper(ls, (*directories)->size))
 	{
 		entries = alloc_vector(POINTER, 1, false);
-		ptr = (t_dir_ptr *)get_element(directories, ls->trav_i);
+		ptr = (t_dir_ptr *)get_element(*directories, ls->trav_i);
 		if (!ptr->directory)
 		{
 			perror("opendir");
@@ -114,7 +114,10 @@ void	open_directories(t_ls *ls, t_vector *directories)
 		ft_printf("\n");
 		if (ls->no_args == false)
 			ft_printf("\n");
-		open_directories(ls, rec_directories);
+		// if (ls->recursive)
+			open_directories(ls, &rec_directories);
+		// else
+		// 	ft_printf("no recursive\n");
 		free_vector(entries);
 		free_vector(rec_directories);
 		closedir(ptr->directory);

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/16 17:18:29 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/17 18:08:25 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/25 16:08:36 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ size_t	get_capacity(t_vector *vector)
 void		resize(t_vector* vector, size_t new_capacity)
 {
 	void	*new_data;
-
 	new_data = malloc(new_capacity);
 	if (!new_data)
 	{
