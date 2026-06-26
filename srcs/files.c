@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   files.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 14:33:44 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/24 21:32:32 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/26 14:54:29 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	traverse_entries(t_ls *ls, t_dir_ptr *dir, t_vector *entries, t_vector **di
 	char			*path;
 	size_t			temp;
 	struct stat		st;
-	struct dirent	*elem;
+	char			*elem;
 	struct winsize	w;
 	
 	temp = ls->trav_i;
@@ -54,16 +54,19 @@ void	traverse_entries(t_ls *ls, t_dir_ptr *dir, t_vector *entries, t_vector **di
 	path = NULL;
 	ls->multiple_columns = multiple_col_print(ls, entries, &w);
 	lstat(dir->directory_name, &st);
+	ft_printf("number of entries %d\n", entries->size);
+	ft_printf("capacity %d\n", entries->capacity);
 	while (looper(ls, entries->size))
 	{
-		elem = (struct dirent *)get_element(entries, ls->trav_i);
+		// elem = (struct dirent *)get_element(entries, ls->trav_i);
+		elem = (char *)get_element(entries, ls->trav_i);
 		path = build_path(ls, dir->directory_name, elem);
 		lstat(path, &st);
 		if (ls->recursive)
 		{
 			if (S_ISDIR(st.st_mode))
 			{
-				if (ft_strncmp(elem->d_name, ".", -1) != 0 && ft_strncmp(elem->d_name, "..", -1) != 0)
+				if (ft_strncmp(elem, ".", -1) != 0 && ft_strncmp(elem, "..", -1) != 0)
 					add_directory(path, *directories);
 			}
 		}
@@ -75,7 +78,7 @@ void	traverse_entries(t_ls *ls, t_dir_ptr *dir, t_vector *entries, t_vector **di
 			ls->columns_written = 0;
 			ft_printf("\n");
 		}
-		print_file(ls, dir, elem, &st);
+		// print_file(ls, dir, elem, &st);
 		ft_printf("  ");
 		if (ft_strchr(ls->options, 'l'))
 		{
@@ -92,6 +95,7 @@ void	traverse_entries(t_ls *ls, t_dir_ptr *dir, t_vector *entries, t_vector **di
 void	add_dirent_entries(t_ls *ls, t_vector *dirent_entries, t_dir_ptr* current_dir)
 {
 	struct dirent	*entry;
+	char			*entry_str;
 
 	entry = readdir(current_dir->directory);
 	while (entry)
@@ -101,7 +105,11 @@ void	add_dirent_entries(t_ls *ls, t_vector *dirent_entries, t_dir_ptr* current_d
 			entry = readdir(current_dir->directory);
 			continue;
 		}
-		add_to_vector(dirent_entries, entry, POINTER);
+		
+		entry_str = ft_strdup(entry->d_name);
+		// ft_printf("adding %s\n", entry->d_name);
+		// add_to_vector(*dirent_entries, entry, POINTER);
+		add_to_vector(dirent_entries, entry_str, STRING);
 		check_longest(ls, current_dir, entry);
 		entry = readdir(current_dir->directory);
 	}

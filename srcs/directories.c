@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   directories.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:53 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/25 16:13:20 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/26 14:37:50 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	add_arg_directories(t_ls *ls, t_vector **directory_vector)
 	while (++i < ls->directories->size)
 	{
 		current_path = (char *)get_element(ls->directories, i);
-		lstat(current_path, &st);
+		stat(current_path, &st);
 		if (S_ISDIR(st.st_mode))
 		{
 			ptr = opendir(current_path);
@@ -105,7 +105,14 @@ void	open_directories(t_ls *ls, t_vector **directories)
 			perror("opendir");
 			return ;
 		}
+		ft_printf("checking %s\n", ptr->directory_name);
 		add_dirent_entries(ls, entries, ptr);
+		for (size_t i = 0; i < entries->size; i++)
+		{
+			struct dirent *elem = (struct dirent *)get_element(entries, i);
+			ft_printf("entries[%d] %s\n", i, elem->d_name);
+			// ft_printf("test test %s\n", get_element(entries, i));
+		}
 		merge_dirent(entries->data, 0, entries->size, ls->time);
 		if (ls->no_args == false)
 			ft_printf("%s:\n", ptr->directory_name);
@@ -114,7 +121,7 @@ void	open_directories(t_ls *ls, t_vector **directories)
 		ft_printf("\n");
 		if (ls->no_args == false)
 			ft_printf("\n");
-		// if (ls->recursive)
+		if (ls->recursive)
 			open_directories(ls, &rec_directories);
 		// else
 		// 	ft_printf("no recursive\n");

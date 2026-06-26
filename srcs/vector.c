@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 21:05:03 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/22 14:03:08 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/26 13:49:01 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,10 @@ t_vector	non_alloc_vector(t_data_type data_type, size_t size)
 void	add_to_vector(t_vector *vector, void *element, t_data_type data_type)
 {
 	if (vector->member_size * vector->size >= vector->capacity)
+	{
+		ft_printf("resizing %d capacity %d\n", vector->member_size * vector->size, vector->capacity);
 		resize(vector, vector->capacity * 2);
+	}
 	if (data_type == STRING || data_type == POINTER)
 		ft_memmove(vector->data + (vector->size * vector->member_size), \
 &element, vector->member_size);
@@ -104,6 +107,11 @@ void	add_to_vector(t_vector *vector, void *element, t_data_type data_type)
 		ft_memmove(vector->data + (vector->size * vector->member_size), \
 element, vector->member_size);
 	vector->size++;
+	if (vector->capacity == (size_t)-1 || vector->size == (size_t)-1)
+	{
+		ft_printf("not working\n");
+		exit(1);
+	}
 }
 
 /**

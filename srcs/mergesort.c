@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mergesort.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/15 20:43:18 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/24 18:34:01 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/26 14:51:12 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ static void merger_dirent(struct dirent **array, int start, int middle, int end,
 	int i;
 	int	j;
 	int	k;
-	struct dirent **left_arr = calloc(middle - start, sizeof(struct dirent *));
-	struct dirent **right_arr = calloc(end - middle, sizeof(struct dirent *));
+	char **left_arr = calloc(middle - start, sizeof(char *));
+	char **right_arr = calloc(end - middle, sizeof(char *));
 	struct stat	left;
 	struct stat	right;
 
@@ -91,8 +91,8 @@ static void merger_dirent(struct dirent **array, int start, int middle, int end,
 	k = start;
 	while (i < middle - start && j < end - middle)
 	{
-		lstat(left_arr[i]->d_name, &left);
-		lstat(right_arr[j]->d_name, &right);
+		lstat(left_arr[i], &left);
+		lstat(right_arr[j], &right);
 		if (time)
 		{
 			if (left.st_mtime > right.st_mtime)
@@ -102,7 +102,7 @@ static void merger_dirent(struct dirent **array, int start, int middle, int end,
 		}
 		else
 		{
-			if (ft_strncmp(left_arr[i]->d_name, right_arr[j]->d_name, -1) <= 0)
+			if (ft_strncmp(left_arr[i], right_arr[j], -1) <= 0)
 				array[k] = left_arr[i++];
 			else
 				array[k] = right_arr[j++];

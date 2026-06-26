@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   vector_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/16 17:18:29 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/25 16:08:36 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/26 14:14:44 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "vector.h"
+#include <string.h>
 
 /**
  * @brief Returns the element from vector at given index
@@ -28,7 +29,8 @@ char	*get_element(t_vector *vector, size_t index)
 	data = vector->data;
 	if (vector->data_type == STRING || vector->data_type == POINTER)
 	{
-		ft_memcpy(&ptr, data + (index * vector->member_size), vector->member_size);
+		// ft_memmove(&ptr, data + (index * vector->member_size), vector->member_size);
+		memmove(&ptr, data + (index * vector->member_size), vector->member_size);
 		return (ptr);		
 	}
 	return (data + (index * vector->member_size));
@@ -53,6 +55,7 @@ size_t	get_capacity(t_vector *vector)
 void		resize(t_vector* vector, size_t new_capacity)
 {
 	void	*new_data;
+
 	new_data = malloc(new_capacity);
 	if (!new_data)
 	{
@@ -60,7 +63,8 @@ void		resize(t_vector* vector, size_t new_capacity)
 		vector->size = -1;
 		return ;
 	}
-	ft_memmove(new_data, vector->data, vector->capacity);
+	// ft_memmove(new_data, vector->data, vector->capacity);
+	memmove(new_data, vector->data, vector->capacity);
 	free(vector->data);
 	vector->data = new_data;
 	vector->capacity = new_capacity;
