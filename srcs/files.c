@@ -3,49 +3,49 @@
 /*                                                        :::      ::::::::   */
 /*   files.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 14:33:44 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/26 14:54:29 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/26 17:08:07 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
 
-void	print_file(t_ls *ls, t_dir_ptr *dir, struct dirent *elem, struct stat *st)
+void	print_file(t_ls *ls, t_dir_ptr *dir, char *elem, struct stat *st)
 {
 	if (S_ISDIR(st->st_mode))
 	{
 		if (ls->multiple_columns)
 			ls->columns_written += ft_printf("\e[1;34m%-*s\e[0m", \
-                dir->longest_filename, elem->d_name);
+                dir->longest_filename, elem);
 		else
-			ls->columns_written += ft_printf("%s", elem->d_name);
+			ls->columns_written += ft_printf("%s", elem);
 	}
 	else if (st->st_mode & S_IXUSR)
 	{
 		if (ls->multiple_columns)
 			ls->columns_written += ft_printf("\e[1;32m%-*s\e[0m", \
-                dir->longest_filename, elem->d_name);
+                dir->longest_filename, elem);
 		else
-			ls->columns_written += ft_printf("%s", elem->d_name);
+			ls->columns_written += ft_printf("%s", elem);
 	}
 	else
 	{
 		if (ls->multiple_columns)
 			ls->columns_written += ft_printf("\e[m%-*s\e[0m", \
-                dir->longest_filename, elem->d_name);
+                dir->longest_filename, elem);
 		else
-			ls->columns_written += ft_printf("%s", elem->d_name);
+			ls->columns_written += ft_printf("%s", elem);
 	}
 }
 
 void	traverse_entries(t_ls *ls, t_dir_ptr *dir, t_vector *entries, t_vector **directories)
 {
 	char			*path;
+	char			*elem;
 	size_t			temp;
 	struct stat		st;
-	char			*elem;
 	struct winsize	w;
 	
 	temp = ls->trav_i;
@@ -54,11 +54,34 @@ void	traverse_entries(t_ls *ls, t_dir_ptr *dir, t_vector *entries, t_vector **di
 	path = NULL;
 	ls->multiple_columns = multiple_col_print(ls, entries, &w);
 	lstat(dir->directory_name, &st);
-	ft_printf("number of entries %d\n", entries->size);
-	ft_printf("capacity %d\n", entries->capacity);
 	while (looper(ls, entries->size))
 	{
-		// elem = (struct dirent *)get_element(entries, ls->trav_i);
+		elem = (char *)get_element(entries, ls->trav_i);
+		path = build_path(ls, dir->directory_name, elem);
+		lstat(path, &st);
+		if (ls->list)
+			print_list(&st, dir);
+		if (ls->columns_written >= w.ws_col)
+		{
+			ls->columns_written = 0;
+			ft_printf("\n");
+		}
+		print_file(ls, dir, elem, &st);
+		ft_printf("  ");
+		if (ft_strchr(ls->options, 'l'))
+		{
+			ft_printf("\n");
+			ls->columns_written = 0;
+		}
+		free(path);
+	}
+	if (ls->columns_written > 0)
+		ft_printf("\n");
+	ls->multiple_columns = false;
+	ls->columns_written = 0;
+	set_index(ls, entries->size);
+	while (looper(ls, entries->size))
+	{
 		elem = (char *)get_element(entries, ls->trav_i);
 		path = build_path(ls, dir->directory_name, elem);
 		lstat(path, &st);
@@ -70,25 +93,8 @@ void	traverse_entries(t_ls *ls, t_dir_ptr *dir, t_vector *entries, t_vector **di
 					add_directory(path, *directories);
 			}
 		}
-		lstat(path, &st);
-		if (ls->list)
-			print_list(&st, dir);
-		if (ls->columns_written > w.ws_col)
-		{
-			ls->columns_written = 0;
-			ft_printf("\n");
-		}
-		// print_file(ls, dir, elem, &st);
-		ft_printf("  ");
-		if (ft_strchr(ls->options, 'l'))
-		{
-			ft_printf("\n");
-			ls->columns_written = 0;
-		}
 		free(path);
 	}
-	ls->multiple_columns = false;
-	ls->columns_written = 0;
 	ls->trav_i = temp;
 }
 

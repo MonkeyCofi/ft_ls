@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ls.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:24 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/26 14:37:33 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/26 15:34:01 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,9 @@ typedef struct s_dir_ptr
 
 void		check_group_owner(struct stat *st, t_dir_ptr *current_dir);
 void    	mergesort_string(char **array, int start, int end);
-void    	merge_dirent(struct dirent **entries, int start, int end, bool time_sort);
+void    	merge_dirent(char **entries, int start, int end, bool time_sort);
 void    	merge_directories(t_dir_ptr **dir_ptrs, int start, int end);
-char		*build_path(t_ls *ls, const char *directory, struct dirent *entry);
+char		*build_path(t_ls *ls, const char *directory, char *entry);
 bool		multiple_col_print(t_ls *ls, t_vector *entries, struct winsize *w);
 
 /*************************/

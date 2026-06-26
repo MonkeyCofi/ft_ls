@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   directories.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:53 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/26 14:37:50 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/26 16:42:01 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	add_directory(char *path, t_vector *directory_vector)
 			open_dir = opendir(path);
 			if (!open_dir)
 			{
+				ft_printf("%s : ", path);
 				perror("opendir");
 				return ;
 			}
@@ -105,14 +106,14 @@ void	open_directories(t_ls *ls, t_vector **directories)
 			perror("opendir");
 			return ;
 		}
-		ft_printf("checking %s\n", ptr->directory_name);
+		// ft_printf("checking %s\n", ptr->directory_name);
 		add_dirent_entries(ls, entries, ptr);
-		for (size_t i = 0; i < entries->size; i++)
-		{
-			struct dirent *elem = (struct dirent *)get_element(entries, i);
-			ft_printf("entries[%d] %s\n", i, elem->d_name);
-			// ft_printf("test test %s\n", get_element(entries, i));
-		}
+		// for (size_t i = 0; i < entries->size; i++)
+		// {
+		// 	char *elem = get_element(entries, i);
+		// 	ft_printf("entries[%d] %s\n", i, elem);
+		// 	// ft_printf("test test %s\n", get_element(entries, i));
+		// }
 		merge_dirent(entries->data, 0, entries->size, ls->time);
 		if (ls->no_args == false)
 			ft_printf("%s:\n", ptr->directory_name);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 21:05:03 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/26 13:49:01 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/26 15:39:52 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,10 +96,7 @@ t_vector	non_alloc_vector(t_data_type data_type, size_t size)
 void	add_to_vector(t_vector *vector, void *element, t_data_type data_type)
 {
 	if (vector->member_size * vector->size >= vector->capacity)
-	{
-		ft_printf("resizing %d capacity %d\n", vector->member_size * vector->size, vector->capacity);
 		resize(vector, vector->capacity * 2);
-	}
 	if (data_type == STRING || data_type == POINTER)
 		ft_memmove(vector->data + (vector->size * vector->member_size), \
 &element, vector->member_size);

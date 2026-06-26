@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:41 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/26 13:31:00 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/26 15:41:04 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,6 @@ int main(int ac, char **av)
 		front = peek_front(ls.directory_queue);
 	}
 	mergesort_string(ls.directories->data, 0, ls.directories->size);
-	for (size_t i = 0; i < ls.directories->size; i++)
-	{
-		ft_printf("vector %s\n", get_element(ls.directories, i));
-	}
 	directories = alloc_vector(POINTER, ls.directories->size, true);
 	add_arg_directories(&ls, &directories);
 	open_directories(&ls, &directories);

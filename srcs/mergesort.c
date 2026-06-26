@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mergesort.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/15 20:43:18 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/26 14:51:12 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/26 15:33:38 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void    mergesort_string(char **array, int start, int end)
 	merge(array, start, middle, end); 
 }
 
-static void merger_dirent(struct dirent **array, int start, int middle, int end, bool time)
+static void merger_dirent(char **array, int start, int middle, int end, bool time)
 {
 	int i;
 	int	j;
@@ -124,7 +124,7 @@ static void merger_dirent(struct dirent **array, int start, int middle, int end,
 	It takes three parameters: the array, the starting index, and the ending index
 	
 */
-void    merge_dirent(struct dirent **entries, int start, int end, bool time_sort)
+void    merge_dirent(char **entries, int start, int end, bool time_sort)
 {
 	int     middle;
 	
