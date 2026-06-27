@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 21:05:03 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/26 15:39:52 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/26 20:57:59 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ size_t	get_data_size(t_data_type data_type)
 		return (sizeof(char *));
 	else if (data_type == POINTER)
 		return (sizeof(void *));
+	else if (data_type == DIRECTORY)
+		return (sizeof(t_dir_ptr *));
 	return (-1);
 }
 
@@ -97,7 +99,7 @@ void	add_to_vector(t_vector *vector, void *element, t_data_type data_type)
 {
 	if (vector->member_size * vector->size >= vector->capacity)
 		resize(vector, vector->capacity * 2);
-	if (data_type == STRING || data_type == POINTER)
+	if (data_type == STRING || data_type == POINTER || data_type == DIRECTORY)
 		ft_memmove(vector->data + (vector->size * vector->member_size), \
 &element, vector->member_size);
 	else
@@ -120,13 +122,20 @@ element, vector->member_size);
 void	free_vector(t_vector *vector)
 {
 	size_t	i;
+	char	*element;
 
 	i = 0;
 	if (vector->should_free)
 	{
 		while (i < vector->size)
 		{
-			free((char *)get_element(vector, i));
+			element = get_element(vector, i);
+			if (vector->data_type == DIRECTORY)
+			{
+				ft_printf("freeing directory str\n");
+				free(((t_dir_ptr *)element)->directory_name);	
+			}
+			free(element);
 			i++;
 		}
 	}

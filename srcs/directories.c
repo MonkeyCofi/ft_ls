@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   directories.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:53 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/26 16:42:01 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/27 01:03:45 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,11 @@ void	add_directory(char *path, t_vector *directory_vector)
 	}
 }
 
+void	free_tdir_ptr(t_dir_ptr *ptr)
+{
+	free(ptr->directory_name);
+}
+
 void	add_arg_directories(t_ls *ls, t_vector **directory_vector)
 {
 	char		*current_path;
@@ -76,7 +81,7 @@ void	add_arg_directories(t_ls *ls, t_vector **directory_vector)
 		{
 			ptr = opendir(current_path);
 			dir_ptr = create_tdirptr(current_path, ptr);
-			add_to_vector(*directory_vector, dir_ptr, POINTER);
+			add_to_vector(*directory_vector, dir_ptr, DIRECTORY);
 		}
 		else
 			printf("failed %s\n", get_element(ls->directories, i));
@@ -99,33 +104,25 @@ void	open_directories(t_ls *ls, t_vector **directories)
 	set_index(ls, (*directories)->size);
 	while (looper(ls, (*directories)->size))
 	{
-		entries = alloc_vector(POINTER, 1, false);
+		entries = alloc_vector(STRING, 1, true);
 		ptr = (t_dir_ptr *)get_element(*directories, ls->trav_i);
 		if (!ptr->directory)
 		{
 			perror("opendir");
 			return ;
 		}
-		// ft_printf("checking %s\n", ptr->directory_name);
+		ft_printf("adding from dir %s\n", ptr->directory_name);
 		add_dirent_entries(ls, entries, ptr);
-		// for (size_t i = 0; i < entries->size; i++)
-		// {
-		// 	char *elem = get_element(entries, i);
-		// 	ft_printf("entries[%d] %s\n", i, elem);
-		// 	// ft_printf("test test %s\n", get_element(entries, i));
-		// }
 		merge_dirent(entries->data, 0, entries->size, ls->time);
 		if (ls->no_args == false)
 			ft_printf("%s:\n", ptr->directory_name);
-		rec_directories = alloc_vector(POINTER, 1, true);
+		rec_directories = alloc_vector(DIRECTORY, 1, true);
 		traverse_entries(ls, ptr, entries, &rec_directories);
 		ft_printf("\n");
 		if (ls->no_args == false)
 			ft_printf("\n");
 		if (ls->recursive)
 			open_directories(ls, &rec_directories);
-		// else
-		// 	ft_printf("no recursive\n");
 		free_vector(entries);
 		free_vector(rec_directories);
 		closedir(ptr->directory);

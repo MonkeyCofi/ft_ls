@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:05 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/26 17:05:25 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/26 18:49:42 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,7 @@ bool	multiple_col_print(t_ls *ls, t_vector *entries, struct winsize *w)
 	count = 0;
 	while (++i < size)
 	{
-		// element = (struct dirent *)get_element(entries, i);
 		element = get_element(entries, i);
-		// count += ft_strlen(element->d_name);
 		count += ft_strlen(element);
 		if (count >= w->ws_col)
 			return true;

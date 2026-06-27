@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_ls.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:24 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/26 15:34:01 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/26 19:16:51 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,17 +61,6 @@ typedef struct s_ls
 	int			error_code;
 	size_t		trav_i;
 }   t_ls;
-
-typedef struct s_dir_ptr
-{
-	char	*directory_name;
-	size_t	longest_filename;
-	size_t	longest_filesize;
-	size_t	longest_hlsize;
-	size_t	longest_owner;
-	size_t	longest_group;
-	DIR		*directory;
-}	t_dir_ptr;
 
 void		check_group_owner(struct stat *st, t_dir_ptr *current_dir);
 void    	mergesort_string(char **array, int start, int end);

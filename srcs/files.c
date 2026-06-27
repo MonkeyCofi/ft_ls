@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   files.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 14:33:44 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/26 17:08:07 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/27 01:03:11 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,6 @@ void	add_dirent_entries(t_ls *ls, t_vector *dirent_entries, t_dir_ptr* current_d
 		}
 		
 		entry_str = ft_strdup(entry->d_name);
-		// ft_printf("adding %s\n", entry->d_name);
-		// add_to_vector(*dirent_entries, entry, POINTER);
 		add_to_vector(dirent_entries, entry_str, STRING);
 		check_longest(ls, current_dir, entry);
 		entry = readdir(current_dir->directory);

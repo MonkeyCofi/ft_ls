@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 20:46:53 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/19 14:24:52 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/26 19:50:50 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,26 @@
 # include "libft.h"
 # include <stdbool.h>
 # include <stdlib.h>
+# include <sys/types.h>
+# include <dirent.h>
+
+typedef struct s_dir_ptr
+{
+	char	*directory_name;
+	size_t	longest_filename;
+	size_t	longest_filesize;
+	size_t	longest_hlsize;
+	size_t	longest_owner;
+	size_t	longest_group;
+	DIR		*directory;
+}	t_dir_ptr;
 
 typedef enum s_data_type
 {
 	INTEGER,
 	STRING,
-	POINTER
+	POINTER,
+	DIRECTORY
 }	t_data_type;
 
 typedef struct	s_vector
