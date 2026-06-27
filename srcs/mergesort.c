@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/15 20:43:18 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/26 15:33:38 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/27 14:39:11 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void    mergesort_string(char **array, int start, int end)
 	merge(array, start, middle, end); 
 }
 
-static void merger_dirent(char **array, int start, int middle, int end, bool time)
+static void merger_dirent(char **array, int start, int middle, int end, bool time, t_dir_ptr *dir)
 {
 	int i;
 	int	j;
@@ -91,10 +91,17 @@ static void merger_dirent(char **array, int start, int middle, int end, bool tim
 	k = start;
 	while (i < middle - start && j < end - middle)
 	{
-		lstat(left_arr[i], &left);
-		lstat(right_arr[j], &right);
 		if (time)
 		{
+			// char *full_path = ft_strjoin(dir->directory_name, left_arr[i]);
+			char *full_path = build_path(NULL, dir->directory_name, left_arr[i]);
+			if (lstat(full_path, &left) == -1)
+				exit(1);
+			free(full_path);
+			full_path = build_path(NULL, dir->directory_name, right_arr[j]);
+			if (lstat(full_path, &right) == -1)
+				exit(1);
+			free(full_path);
 			if (left.st_mtime > right.st_mtime)
 				array[k] = left_arr[i++];
 			else
@@ -124,16 +131,16 @@ static void merger_dirent(char **array, int start, int middle, int end, bool tim
 	It takes three parameters: the array, the starting index, and the ending index
 	
 */
-void    merge_dirent(char **entries, int start, int end, bool time_sort)
+void    merge_dirent(char **entries, int start, int end, bool time_sort, t_dir_ptr *dir)
 {
 	int     middle;
 	
 	if (end - start <= 1)   // base case: 0 or 1 element
 	   return;
 	middle = start + (end - start) / 2;
-	merge_dirent(entries, start, middle, time_sort);
-	merge_dirent(entries, middle, end, time_sort);
-	merger_dirent(entries, start, middle, end, time_sort); 
+	merge_dirent(entries, start, middle, time_sort, dir);
+	merge_dirent(entries, middle, end, time_sort, dir);
+	merger_dirent(entries, start, middle, end, time_sort, dir); 
 }
 
 static void merge_dir_vectors(t_dir_ptr **array, int start, int middle, int end)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/16 17:18:29 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/26 14:14:44 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/27 13:47:51 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ char	*get_element(t_vector *vector, size_t index)
 	char	*ptr;
 
 	data = vector->data;
-	if (vector->data_type == STRING || vector->data_type == POINTER)
+	if (vector->data_type == STRING || vector->data_type == POINTER || vector->data_type == DIRECTORY)
 	{
 		// ft_memmove(&ptr, data + (index * vector->member_size), vector->member_size);
 		memmove(&ptr, data + (index * vector->member_size), vector->member_size);

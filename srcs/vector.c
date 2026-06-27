@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/13 21:05:03 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/26 20:57:59 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/27 14:08:59 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,8 +132,7 @@ void	free_vector(t_vector *vector)
 			element = get_element(vector, i);
 			if (vector->data_type == DIRECTORY)
 			{
-				ft_printf("freeing directory str\n");
-				free(((t_dir_ptr *)element)->directory_name);	
+				free(((t_dir_ptr *)element)->directory_name);
 			}
 			free(element);
 			i++;

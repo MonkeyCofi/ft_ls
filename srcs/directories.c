@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   directories.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:53 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/27 01:03:45 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/27 14:51:44 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,12 @@ t_dir_ptr	*create_tdirptr(char *directory_name, DIR *dir_ptr)
 	ptr = malloc(sizeof(t_dir_ptr));
 	if (!ptr)
 		return (NULL);
-	ptr->directory_name = directory_name;
+	ptr->directory_name = ft_strdup(directory_name);
+	if (!ptr->directory_name)
+	{
+		free(ptr);
+		return NULL;
+	}
 	ptr->directory = dir_ptr;
 	ptr->longest_filename = 0;
 	ptr->longest_filesize = 0;
@@ -31,7 +36,6 @@ t_dir_ptr	*create_tdirptr(char *directory_name, DIR *dir_ptr)
 
 void	add_directory(char *path, t_vector *directory_vector)
 {
-	char		*directory;
 	struct stat	st;
 	DIR			*open_dir;
 	t_dir_ptr	*dir_ptr;
@@ -47,12 +51,7 @@ void	add_directory(char *path, t_vector *directory_vector)
 				perror("opendir");
 				return ;
 			}
-			directory = ft_strdup(path);
-			if (!directory)
-			{
-				return ;
-			}
-			dir_ptr = create_tdirptr(directory, open_dir);
+			dir_ptr = create_tdirptr(path, open_dir);
 			add_to_vector(directory_vector, dir_ptr, POINTER);
 		}
 	}
@@ -111,9 +110,8 @@ void	open_directories(t_ls *ls, t_vector **directories)
 			perror("opendir");
 			return ;
 		}
-		ft_printf("adding from dir %s\n", ptr->directory_name);
 		add_dirent_entries(ls, entries, ptr);
-		merge_dirent(entries->data, 0, entries->size, ls->time);
+		merge_dirent(entries->data, 0, entries->size, ls->time, ptr);
 		if (ls->no_args == false)
 			ft_printf("%s:\n", ptr->directory_name);
 		rec_directories = alloc_vector(DIRECTORY, 1, true);
