@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:18:36 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/28 15:57:45 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/28 17:43:52 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ void	check_longest(t_ls *ls, t_dir_ptr *current_dir, struct dirent *entry)
 	path = build_path(ls, current_dir->directory_name, entry->d_name);
 	if (lstat(path, &st) == -1)
 	{
-		ft_printf("dir %s ", path);
 		perror("lstat");
 		return ;
 	}

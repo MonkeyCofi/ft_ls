@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:41 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/28 16:03:04 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/28 17:58:10 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,5 @@ int main(int ac, char **av)
 	free_queue(ls.directory_queue);
 	free_vector(ls.directories);
 	free_vector(directories);
+	exit(ls.error_code);
 }

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:53 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/28 16:22:04 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/28 18:07:26 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_dir_ptr	*create_tdirptr(char *directory_name, DIR *dir_ptr)
 	if (!ptr->directory_name)
 	{
 		free(ptr);
-		return NULL;
+		return (NULL);
 	}
 	ptr->directory = dir_ptr;
 	ptr->longest_filename = 0;
@@ -34,7 +34,7 @@ t_dir_ptr	*create_tdirptr(char *directory_name, DIR *dir_ptr)
 	return (ptr);
 }
 
-void	add_directory(char *path, t_vector *directory_vector)
+void	add_directory(t_ls *ls, char *path, t_vector *directory_vector)
 {
 	struct stat	st;
 	DIR			*open_dir;
@@ -49,6 +49,7 @@ void	add_directory(char *path, t_vector *directory_vector)
 			{
 				ft_printf("%s : ", path);
 				perror("opendir");
+				ls->error_code = 1;
 				return ;
 			}
 			dir_ptr = create_tdirptr(path, open_dir);
@@ -78,7 +79,10 @@ void	add_arg_directories(t_ls *ls, t_vector **directory_vector)
 			add_to_vector(*directory_vector, dir_ptr, DIRECTORY);
 		}
 		else
-			printf("failed %s\n", get_element(ls->directories, i));
+		{
+			char *str = get_element(ls->directories, i);
+			add_to_vector(*directory_vector, str, STRING);
+		}
 	}
 }
 
@@ -103,6 +107,7 @@ void	open_directories(t_ls *ls, t_vector **directories)
 		if (!ptr->directory)
 		{
 			perror("opendir");
+			ls->error_code = 1;
 			return ;
 		}
 		add_dirent_entries(ls, entries, ptr);
@@ -112,8 +117,8 @@ void	open_directories(t_ls *ls, t_vector **directories)
 		if (ls->no_args == false)
 			ft_printf("%s:\n", ptr->directory_name);
 		rec_directories = alloc_vector(DIRECTORY, 1, true);
-		traverse_entries(ls, ptr, entries, &rec_directories);
-		ft_printf("\n");
+		traverse_entries(ls, ptr, entries, rec_directories);
+		// ft_printf("\n");
 		if (ls->no_args == false)
 			ft_printf("\n");
 		if (ls->recursive)
@@ -123,4 +128,30 @@ void	open_directories(t_ls *ls, t_vector **directories)
 		closedir(ptr->directory);
 	}
 	ls->trav_i = temp;
+}
+
+void	add_directory_in_dir(t_ls *ls, t_vector *entries, \
+t_vector *directories, t_dir_ptr *dir)
+{
+	char		*elem;
+	char		*path;
+	struct stat	st;
+
+	set_index(ls, entries->size);
+	while (looper(ls, entries->size))
+	{
+		elem = (char *)get_element(entries, ls->trav_i);
+		path = build_path(ls, dir->directory_name, elem);
+		lstat(path, &st);
+		if (ls->recursive)
+		{
+			if (S_ISDIR(st.st_mode))
+			{
+				if (ft_strncmp(elem, ".", -1) != 0 && \
+ft_strncmp(elem, "..", -1) != 0)
+					add_directory(ls, path, directories);
+			}
+		}
+		free(path);
+	}
 }

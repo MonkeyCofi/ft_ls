@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pipolint <pipolint@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 20:55:17 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/25 17:51:11 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/28 18:01:50 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ void    parse_cli(char **args, int arg_count, t_ls *ls)
 		}
 		i++;
 	}
-	// if the queue is empty, add the current directory to the queue
 	if (is_empty(ls->directory_queue))
 	{
 		ls->no_args = true;

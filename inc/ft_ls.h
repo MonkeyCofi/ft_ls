@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:24 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/28 16:21:50 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/28 17:57:22 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,15 +82,16 @@ bool		multiple_col_print(t_ls *ls, t_vector *entries, struct winsize *w);
 /*			Files		 */ 
 /*************************/
 void		add_dirent_entries(t_ls *ls, t_vector *dirent_entries, t_dir_ptr* current_dir);
-void		traverse_entries(t_ls *ls, t_dir_ptr *dir, t_vector *entries, t_vector **directories);
+void		traverse_entries(t_ls *ls, t_dir_ptr *dir, t_vector *entries, t_vector *directories);
 
 /*************************/
 /*		Directories		 */ 
 /*************************/
 t_dir_ptr	*create_tdirptr(char *directory_name, DIR *dir_ptr);
-void		add_directory(char *path, t_vector *directory_vector);
+void		add_directory(t_ls *ls, char *path, t_vector *directory_vector);
 void		add_arg_directories(t_ls *ls, t_vector **directory_vector);
 void 		open_directories(t_ls *ls, t_vector **directories_ptrs);
+void		add_directory_in_dir(t_ls *ls, t_vector *entries, t_vector *directories, t_dir_ptr *dir);
 
 /*************************/
 /*			List		 */ 
