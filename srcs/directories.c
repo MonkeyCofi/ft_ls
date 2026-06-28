@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:53 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/27 14:51:44 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/28 16:22:04 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,6 @@ void	add_directory(char *path, t_vector *directory_vector)
 			add_to_vector(directory_vector, dir_ptr, POINTER);
 		}
 	}
-}
-
-void	free_tdir_ptr(t_dir_ptr *ptr)
-{
-	free(ptr->directory_name);
 }
 
 void	add_arg_directories(t_ls *ls, t_vector **directory_vector)
@@ -111,7 +106,9 @@ void	open_directories(t_ls *ls, t_vector **directories)
 			return ;
 		}
 		add_dirent_entries(ls, entries, ptr);
-		merge_dirent(entries->data, 0, entries->size, ls->time, ptr);
+		ls->merge_array = (char **)entries->data;
+		ls->merge_dir = ptr;
+		merge_dirent(ls, 0, entries->size);
 		if (ls->no_args == false)
 			ft_printf("%s:\n", ptr->directory_name);
 		rec_directories = alloc_vector(DIRECTORY, 1, true);

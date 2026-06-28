@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:18:36 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/26 15:37:47 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/28 15:57:45 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,4 +92,24 @@ list_char(&perms, S_IXOTH));
 	ft_printf("%*d ", ptr->longest_filesize, st->st_size);
 	ft_printf("%s %02d ", months[now_t.tm_mon], now_t.tm_mday);
 	ft_printf("%02d:%02d ", now_t.tm_hour, now_t.tm_min);
+}
+
+void	print_block_size(t_ls *ls, t_vector *entries, t_dir_ptr *curr_dir)
+{
+	char		*path;
+	char		*elem;
+	size_t		total;
+	struct stat	st;
+
+	total = 0;
+	while (looper(ls, entries->size))
+	{
+		elem = (char *)get_element(entries, ls->trav_i);
+		path = build_path(ls, curr_dir->directory_name, elem);
+		lstat(path, &st);
+		total += st.st_blocks / 2;
+		free(path);
+	}
+	ft_printf("total %ld\n", total);
+	set_index(ls, entries->size);
 }

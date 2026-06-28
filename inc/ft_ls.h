@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:24 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/27 14:25:19 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/28 16:21:50 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,20 @@ typedef struct s_ls
 	int			exit_code;
 	int			error_code;
 	size_t		trav_i;
+	char		**merge_array;
+	t_dir_ptr	*merge_dir;
 }   t_ls;
+
+typedef struct s_merge
+{
+	int	start;
+	int	middle;
+	int	end;
+}	t_merge;
 
 void		check_group_owner(struct stat *st, t_dir_ptr *current_dir);
 void    	mergesort_string(char **array, int start, int end);
-void    	merge_dirent(char **entries, int start, int end, bool time_sort, t_dir_ptr *dir);
+void    	merge_dirent(t_ls *ls, int start, int end);
 void    	merge_directories(t_dir_ptr **dir_ptrs, int start, int end);
 char		*build_path(t_ls *ls, const char *directory, char *entry);
 bool		multiple_col_print(t_ls *ls, t_vector *entries, struct winsize *w);
@@ -88,6 +97,7 @@ void 		open_directories(t_ls *ls, t_vector **directories_ptrs);
 /*************************/
 void		check_longest(t_ls *ls, t_dir_ptr *current_dir, struct dirent *entry);
 void		print_list(struct stat *st, t_dir_ptr *ptr);
+void		print_block_size(t_ls *ls, t_vector *entries, t_dir_ptr *curr_dir);
 
 bool		looper(t_ls *ls, size_t max);
 void    	set_index(t_ls *ls, size_t max);
