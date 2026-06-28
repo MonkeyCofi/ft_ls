@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 14:33:44 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/28 17:51:27 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/28 21:03:34 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ dir->longest_filename, elem);
 	else
 		ls->columns_written += ft_printf("%s", elem);
 	ft_printf("  ");
-	if (ft_strchr(ls->options, 'l'))
+	if (ls->list)
 	{
 		ft_printf("\n");
 		ls->columns_written = 0;
