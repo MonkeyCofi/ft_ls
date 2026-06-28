@@ -12,6 +12,29 @@
 
 #include "ft_ls.h"
 
+static void	check_longest_file(t_dir_ptr *current_dir, char *name, struct stat *st)
+{
+	char	*itoa_str;
+
+	if (ft_strlen(name) > current_dir->longest_filename)
+		current_dir->longest_filename = ft_strlen(name);
+	itoa_str = ft_itoa(st->st_size);
+	if (itoa_str)
+	{
+		if (ft_strlen(itoa_str) > current_dir->longest_filesize)
+			current_dir->longest_filesize = ft_strlen(itoa_str);
+		free(itoa_str);
+	}
+	itoa_str = ft_itoa(st->st_nlink);
+	if (itoa_str)
+	{
+		if (ft_strlen(itoa_str) > current_dir->longest_hlsize)
+			current_dir->longest_hlsize = ft_strlen(itoa_str);
+		free(itoa_str);
+	}
+	check_group_owner(st, current_dir);
+}
+
 void	print_file(t_ls *ls, t_dir_ptr *dir, char *elem)
 {
 	if (ls->multiple_columns)
@@ -93,4 +116,82 @@ t_dir_ptr *current_dir)
 		check_longest(ls, current_dir, entry);
 		entry = readdir(current_dir->directory);
 	}
+}
+
+void	print_files(t_ls *ls, t_vector *files)
+{
+	t_dir_ptr		file_info;
+	char			*elem;
+	struct stat		st;
+	struct winsize	w;
+	size_t			i;
+
+	if (!files || files->size == 0)
+		return ;
+	ft_memset(&file_info, 0, sizeof(t_dir_ptr));
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+	i = 0;
+	while (i < files->size)
+	{
+		elem = (char *)get_element(files, i);
+		if (ls->list)
+		{
+			if (lstat(elem, &st) == -1)
+			{
+				ft_printf("%s: ", elem);
+				perror("lstat");
+				continue ;
+			}
+			check_longest_file(&file_info, elem, &st);
+		}
+		else if (!ls->list)
+		{
+			if (ft_strlen(elem) > file_info.longest_filename)
+				file_info.longest_filename = ft_strlen(elem);
+		}
+		i++;
+	}
+	ls->multiple_columns = !ls->list && multiple_col_print(ls, files, &w);
+	if (ls->reverse)
+	{
+		i = files->size;
+		while (i-- > 0)
+		{
+			elem = (char *)get_element(files, i);
+			if (ls->list)
+			{
+				if (lstat(elem, &st) == -1)
+					continue ;
+				print_list(&st, &file_info);
+				ft_printf("%s\n", elem);
+			}
+			else
+				print_file(ls, &file_info, elem);
+		}
+	}
+	else
+	{
+		i = 0;
+		while (i < files->size)
+		{
+			elem = (char *)get_element(files, i);
+			if (ls->list)
+			{
+				if (lstat(elem, &st) == -1)
+				{
+					i++;
+					continue ;
+				}
+				print_list(&st, &file_info);
+				ft_printf("%s\n", elem);
+			}
+			else
+				print_file(ls, &file_info, elem);
+			i++;
+		}
+	}
+	if (!ls->list && ls->columns_written > 0)
+		ft_printf("\n");
+	ls->columns_written = 0;
+	ls->multiple_columns = false;
 }

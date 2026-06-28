@@ -44,6 +44,7 @@ typedef enum s_options
 typedef struct s_ls
 {
 	t_queue		*directory_queue;	// queue of all directory strings
+	t_vector	*files;			// array of file strings
 	t_vector	*directories;		// array of directory strings
 	t_vector	*dir_entries;		// array of directory entries
 	size_t		option_count;
@@ -90,6 +91,7 @@ void		traverse_entries(t_ls *ls, t_dir_ptr *dir, t_vector *entries, t_vector *di
 t_dir_ptr	*create_tdirptr(char *directory_name, DIR *dir_ptr);
 void		add_directory(t_ls *ls, char *path, t_vector *directory_vector);
 void		add_arg_directories(t_ls *ls, t_vector **directory_vector);
+void		add_arg_files(t_ls *ls, t_vector **file_vector);
 void 		open_directories(t_ls *ls, t_vector **directories_ptrs);
 void		add_directory_in_dir(t_ls *ls, t_vector *entries, t_vector *directories, t_dir_ptr *dir);
 
@@ -99,6 +101,7 @@ void		add_directory_in_dir(t_ls *ls, t_vector *entries, t_vector *directories, t
 void		check_longest(t_ls *ls, t_dir_ptr *current_dir, struct dirent *entry);
 void		print_list(struct stat *st, t_dir_ptr *ptr);
 void		print_block_size(t_ls *ls, t_vector *entries, t_dir_ptr *curr_dir);
+void		print_files(t_ls *ls, t_vector *files);
 
 bool		looper(t_ls *ls, size_t max);
 void    	set_index(t_ls *ls, size_t max);

@@ -78,11 +78,6 @@ void	add_arg_directories(t_ls *ls, t_vector **directory_vector)
 			dir_ptr = create_tdirptr(current_path, ptr);
 			add_to_vector(*directory_vector, dir_ptr, DIRECTORY);
 		}
-		else
-		{
-			char *str = get_element(ls->directories, i);
-			add_to_vector(*directory_vector, str, STRING);
-		}
 	}
 }
 

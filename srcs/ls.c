@@ -15,6 +15,7 @@
 void	initialize_ls(t_ls *ls)
 {
 	ft_memset(ls, 0, sizeof(t_ls));
+    ls->files = alloc_vector(STRING, 20, true);
 	ls->directories = alloc_vector(STRING, 20, true);
 	ls->directory_queue = create_queue();
 	ls->dir_entries = NULL;
