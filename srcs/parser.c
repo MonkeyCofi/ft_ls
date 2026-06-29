@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 20:55:17 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/28 18:01:50 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/29 13:43:06 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,10 @@ void    parse_cli(char **args, int arg_count, t_ls *ls)
 		else
 		{
 			dup_str = ft_strdup(args[i]);
+			if (!dup_str)
+			{
+				
+			}
 			new = create_queue_node(dup_str, true);
 			enqueue_back(ls->directory_queue, new);
 		}

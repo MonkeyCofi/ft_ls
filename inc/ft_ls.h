@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:24 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/28 20:54:48 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/29 13:49:49 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 # define OPTIONS "lRart"
 # define OPTION_COUNT 5
+# define MINOR_ERR 1
+# define MAJOR_ERR 2
 
 # include <dirent.h>
 # include <errno.h>
@@ -45,8 +47,9 @@ typedef struct s_ls
 {
 	t_queue		*directory_queue;	// queue of all directory strings
 	t_vector	*files;			// array of file strings
-	t_vector	*directories;		// array of directory strings
+	t_vector	*cli_args;		// array of directory strings
 	t_vector	*dir_entries;		// array of directory entries
+	t_vector	*directories;	// array of t_dir_ptrs
 	size_t		option_count;
 	size_t		columns_written;
 	char		options[OPTION_COUNT + 1];
@@ -78,6 +81,7 @@ void    	merge_dirent(t_ls *ls, int start, int end);
 void    	merge_directories(t_dir_ptr **dir_ptrs, int start, int end);
 char		*build_path(t_ls *ls, const char *directory, char *entry);
 bool		multiple_col_print(t_ls *ls, t_vector *entries, struct winsize *w);
+void		initialize_dir_strs(t_ls *ls);
 
 /*************************/
 /*			Files		 */ 
@@ -90,7 +94,7 @@ void		traverse_entries(t_ls *ls, t_dir_ptr *dir, t_vector *entries, t_vector *di
 /*************************/
 t_dir_ptr	*create_tdirptr(char *directory_name, DIR *dir_ptr);
 void		add_directory(t_ls *ls, char *path, t_vector *directory_vector);
-void		add_arg_directories(t_ls *ls, t_vector **directory_vector);
+void		add_arg_directories(t_ls *ls);
 void		add_arg_files(t_ls *ls, t_vector **file_vector);
 void 		open_directories(t_ls *ls, t_vector **directories_ptrs);
 void		add_directory_in_dir(t_ls *ls, t_vector *entries, t_vector *directories, t_dir_ptr *dir);
@@ -106,5 +110,7 @@ void		print_files(t_ls *ls, t_vector *files);
 bool		looper(t_ls *ls, size_t max);
 void    	set_index(t_ls *ls, size_t max);
 void		initialize_ls(t_ls *ls);
+
+void		print_error(char *error_msg, char *error_directory, char *perror_msg);
 
 #endif

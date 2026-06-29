@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:53 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/28 20:54:47 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/29 13:57:35 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,7 @@ void	add_directory(t_ls *ls, char *path, t_vector *directory_vector)
 			open_dir = opendir(path);
 			if (!open_dir)
 			{
-				ft_printf("%s : ", path);
-				perror("opendir");
+				print_error("cannot open directory", path, "");
 				ls->error_code = 1;
 				return ;
 			}
@@ -58,7 +57,7 @@ void	add_directory(t_ls *ls, char *path, t_vector *directory_vector)
 	}
 }
 
-void	add_arg_directories(t_ls *ls, t_vector **directory_vector)
+void	add_arg_directories(t_ls *ls)
 {
 	char		*current_path;
 	DIR			*ptr;
@@ -68,15 +67,15 @@ void	add_arg_directories(t_ls *ls, t_vector **directory_vector)
 
 	current_path = NULL;
 	i = -1;
-	while (++i < ls->directories->size)
+	while (++i < ls->cli_args->size)
 	{
-		current_path = (char *)get_element(ls->directories, i);
+		current_path = (char *)get_element(ls->cli_args, i);
 		stat(current_path, &st);
 		if (S_ISDIR(st.st_mode))
 		{
 			ptr = opendir(current_path);
 			dir_ptr = create_tdirptr(current_path, ptr);
-			add_to_vector(*directory_vector, dir_ptr, DIRECTORY);
+			add_to_vector(ls->directories, dir_ptr, DIRECTORY);
 		}
 	}
 }
@@ -98,14 +97,28 @@ void	open_directories(t_ls *ls, t_vector **directories)
 	while (looper(ls, (*directories)->size))
 	{
 		entries = alloc_vector(STRING, 1, true);
+		if (!entries)
+		{
+			ls->error_code = 2;
+			return ;
+		}
 		ptr = (t_dir_ptr *)get_element(*directories, ls->trav_i);
 		if (!ptr->directory)
 		{
-			perror("opendir");
+			ft_putstr_fd("cannot open directory ", STDERR_FILENO);
+			ft_putstr_fd(ptr->directory_name, STDERR_FILENO);
+			perror(" ");
 			ls->error_code = 1;
 			return ;
 		}
 		add_dirent_entries(ls, entries, ptr);
+		if (ls->error_code == 2)
+		{
+			free_vector(entries);
+			free_vector(rec_directories);
+			closedir(ptr->directory);
+			return ;
+		}
 		ls->merge_array = (char **)entries->data;
 		ls->merge_dir = ptr;
 		merge_dirent(ls, 0, entries->size);
@@ -121,6 +134,8 @@ void	open_directories(t_ls *ls, t_vector **directories)
 		free_vector(entries);
 		free_vector(rec_directories);
 		closedir(ptr->directory);
+		if (ls->error_code == 2)
+			return ;
 	}
 	ls->trav_i = temp;
 }

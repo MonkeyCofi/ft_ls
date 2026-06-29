@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 14:33:44 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/28 21:03:34 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/29 13:37:54 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,11 @@ t_dir_ptr *current_dir)
 			continue ;
 		}
 		entry_str = ft_strdup(entry->d_name);
+		if (!entry_str)
+		{
+			ls->error_code = 2;
+			return ;
+		}
 		add_to_vector(dirent_entries, entry_str, STRING);
 		check_longest(ls, current_dir, entry);
 		entry = readdir(current_dir->directory);

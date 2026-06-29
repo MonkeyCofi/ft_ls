@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:05 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/28 16:35:42 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/29 13:35:33 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,4 +82,13 @@ bool	looper(t_ls *ls, size_t max)
 	if (ls->reverse)
 		return ls->trav_i-- > 0;
 	return ++ls->trav_i < max;
+}
+
+void	print_error(char *error_msg, char *error_directory, char *perror_msg)
+{
+	ft_putstr_fd(error_msg, 2);
+	ft_putstr_fd(" '", 2);
+	ft_putstr_fd(error_directory, 2);
+	ft_putstr_fd("': ", 2);
+	perror(perror_msg);
 }
