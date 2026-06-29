@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:05 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/29 13:35:33 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/29 14:09:59 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,9 @@ bool	multiple_col_print(t_ls *ls, t_vector *entries, struct winsize *w)
 bool	looper(t_ls *ls, size_t max)
 {
 	if (ls->reverse)
+	{
 		return ls->trav_i-- > 0;
+	}
 	return ++ls->trav_i < max;
 }
 

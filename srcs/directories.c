@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:53 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/29 13:57:35 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/06/29 14:30:28 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,9 +96,10 @@ void	open_directories(t_ls *ls, t_vector **directories)
 	set_index(ls, (*directories)->size);
 	while (looper(ls, (*directories)->size))
 	{
-		entries = alloc_vector(STRING, 1, true);
+		entries = alloc_vector(STRING, -1, true);
 		if (!entries)
 		{
+			ft_putstr_fd("failed to alloc vector\n", 2);
 			ls->error_code = 2;
 			return ;
 		}
@@ -146,11 +147,12 @@ t_vector *directories, t_dir_ptr *dir)
 	char		*elem;
 	char		*path;
 	struct stat	st;
+	size_t		i;
 
-	set_index(ls, entries->size);
-	while (looper(ls, entries->size))
+	i = 0;
+	while (i < entries->size)
 	{
-		elem = (char *)get_element(entries, ls->trav_i);
+		elem = (char *)get_element(entries, i);
 		path = build_path(ls, dir->directory_name, elem);
 		lstat(path, &st);
 		if (ls->recursive)
@@ -163,5 +165,6 @@ ft_strncmp(elem, "..", -1) != 0)
 			}
 		}
 		free(path);
+		i++;
 	}
 }
