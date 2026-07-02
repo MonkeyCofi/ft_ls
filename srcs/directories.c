@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:53 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/29 14:30:28 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/07/02 15:47:46 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void	open_directories(t_ls *ls, t_vector **directories)
 	set_index(ls, (*directories)->size);
 	while (looper(ls, (*directories)->size))
 	{
-		entries = alloc_vector(STRING, -1, true);
+		entries = alloc_vector(STRING, 1, true);
 		if (!entries)
 		{
 			ft_putstr_fd("failed to alloc vector\n", 2);
@@ -127,7 +127,6 @@ void	open_directories(t_ls *ls, t_vector **directories)
 			ft_printf("%s:\n", ptr->directory_name);
 		rec_directories = alloc_vector(DIRECTORY, 1, true);
 		traverse_entries(ls, ptr, entries, rec_directories);
-		// ft_printf("\n");
 		if (ls->no_args == false)
 			ft_printf("\n");
 		if (ls->recursive)

@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 20:55:17 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/29 13:43:06 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/07/02 15:53:54 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,14 @@ void    parse_options(char *str, t_ls *ls)
 			ls->all = true;
 		else if (str[i] == 'R')
 			ls->recursive = true;
+		else
+		{
+			ft_putstr_fd("Invalid option: -", 2);
+			write(2, &str[i], 1);
+			write(2, "\n", 1);
+			ls->error_code = 2;
+			return ;
+		}
 		i++;
 	}
 }
@@ -60,12 +68,10 @@ void    parse_cli(char **args, int arg_count, t_ls *ls)
 	i = 1;
 	while (args[i])
 	{
-		if (ls->exit_code == 2)
+		if (ls->error_code == 2)
 			return ;
 		if (args[i][0] == '-')
-		{
 			parse_options(args[i], ls);
-		}
 		else
 		{
 			dup_str = ft_strdup(args[i]);

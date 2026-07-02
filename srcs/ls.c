@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/24 20:20:50 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/29 13:56:55 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/07/02 15:47:34 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,9 @@ void	initialize_dir_strs(t_ls *ls)
 	{
 		if (stat(front->data, &st) == -1)
 		{
-			ft_printf("%s: ", (char *)front->data);
-			perror("stat");
+			ft_putstr_fd((char *)front->data, STDERR_FILENO);
+			ft_putstr_fd(": ", STDERR_FILENO);
+			perror("");
 			ls->error_code = 1;
 		}
 		else

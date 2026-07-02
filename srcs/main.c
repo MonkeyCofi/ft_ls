@@ -6,11 +6,23 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:41 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/29 14:30:23 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/07/02 18:12:25 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+
+void	free_ls(t_ls *ls)
+{
+	if (ls->directory_queue)
+		free_queue(ls->directory_queue);
+	if (ls->files)
+		free_vector(ls->files);
+	if (ls->cli_args)
+		free_vector(ls->cli_args);
+	if (ls->directories)
+		free_vector(ls->directories);
+}
 
 int main(int ac, char **av)
 {
@@ -18,6 +30,11 @@ int main(int ac, char **av)
 
 	initialize_ls(&ls);
 	parse_cli(av, ac, &ls);
+	if (ls.error_code == 2)
+	{
+		free_ls(&ls);
+		exit(ls.error_code);
+	}
 	initialize_dir_strs(&ls);
 	if (ls.files->size > 1)
 		mergesort_string(ls.files->data, 0, ls.files->size);
@@ -29,9 +46,6 @@ int main(int ac, char **av)
 	add_arg_directories(&ls);
 	if (ls.directories->size > 0)
 		open_directories(&ls, &ls.directories);
-	free_queue(ls.directory_queue);
-	free_vector(ls.files);
-	free_vector(ls.cli_args);
-	free_vector(ls.directories);
+	free_ls(&ls);
 	exit(ls.error_code);
 }

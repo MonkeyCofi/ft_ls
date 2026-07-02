@@ -6,11 +6,14 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:18:36 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/28 17:43:52 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/07/02 18:11:35 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ls.h"
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
 
 void	check_longest(t_ls *ls, t_dir_ptr *current_dir, struct dirent *entry)
 {
@@ -43,6 +46,24 @@ void	check_longest(t_ls *ls, t_dir_ptr *current_dir, struct dirent *entry)
 
 static char	list_char(mode_t	*perms, int perm)
 {
+	if ((*perms) & S_ISUID && perm == S_IXUSR)
+	{
+		if (!((*perms) & S_IXUSR))
+			return ('S');
+		return ('s');
+	}
+	if ((*perms) & __S_ISVTX && perm == S_IXOTH)
+	{
+		if (!((*perms) & S_IXOTH))
+			return ('T');
+		return ('t');
+	}
+	if ((*perms) & S_ISGID && perm == S_IXGRP)
+	{
+		if (!((*perms) & S_IXGRP))
+			return ('S');
+		return ('s');
+	}
 	if (((*perms) & S_IRUSR && perm == S_IRUSR) || \
 ((*perms) & S_IRGRP && perm == S_IRGRP) || \
 ((*perms) & S_IROTH && perm == S_IROTH))
@@ -50,7 +71,7 @@ static char	list_char(mode_t	*perms, int perm)
 	if (((*perms) & S_IWUSR && perm == S_IWUSR) || \
 ((*perms) & S_IWGRP && perm == S_IWGRP) || \
 ((*perms) & S_IWOTH && perm == S_IWOTH))
-		return ('w');
+	return ('w');
 	if (((*perms) & S_IXUSR && perm == S_IXUSR) || \
 ((*perms) & S_IXGRP && perm == S_IXGRP) || \
 ((*perms) & S_IXOTH && perm == S_IXOTH))
