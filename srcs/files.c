@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 14:33:44 by pipolint          #+#    #+#             */
-/*   Updated: 2026/07/03 12:38:30 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/07/05 15:52:04 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,18 @@ static void	check_longest_file(t_dir_ptr *current_dir, char *name, struct stat *
 	check_group_owner(st, current_dir);
 }
 
-void	print_file(t_ls *ls, t_dir_ptr *dir, char *elem)
+void	print_file(t_ls *ls, t_dir_ptr *dir, char *elem, struct winsize *w)
 {
 	if (ls->multiple_columns)
-		ls->columns_written += ft_printf("\e[m%-*s", \
-dir->longest_filename, elem);
+	{
+		if ((dir->longest_filename + ft_strlen(elem) + ls->columns_written) > w->ws_col)
+		{
+			ls->columns_written = 0;
+			ft_printf("\n");
+		}
+		ls->columns_written += ft_printf("%-*s", \
+			dir->longest_filename, elem);
+	}
 	else
 		ls->columns_written += ft_printf("%s", elem);
 	ft_printf("  ");
@@ -48,6 +55,7 @@ dir->longest_filename, elem);
 		ft_printf("\n");
 		ls->columns_written = 0;
 	}
+	(void)dir;
 }
 
 void	loop_entries(t_ls *ls, t_vector *entries, \
@@ -74,12 +82,7 @@ t_dir_ptr *dir, struct winsize *w)
 		lstat(path, &st);
 		if (ls->list)
 			print_list(&st, dir);
-		if (ls->columns_written >= w->ws_col)
-		{
-			ls->columns_written = 0;
-			ft_printf("\n");
-		}
-		print_file(ls, dir, elem);
+		print_file(ls, dir, elem, w);
 		free(path);
 	}
 }
@@ -196,7 +199,7 @@ void	print_files(t_ls *ls, t_vector *files)
 				ft_printf("%s\n", elem);
 			}
 			else
-				print_file(ls, &file_info, elem);
+				print_file(ls, &file_info, elem, &w);
 		}
 	}
 	else
@@ -216,7 +219,7 @@ void	print_files(t_ls *ls, t_vector *files)
 				ft_printf("%s\n", elem);
 			}
 			else
-				print_file(ls, &file_info, elem);
+				print_file(ls, &file_info, elem, &w);
 			i++;
 		}
 	}
