@@ -51,8 +51,8 @@ typedef struct	s_vector
 t_vector	*alloc_vector(t_data_type data_type, size_t element_count, bool should_free);
 t_vector	non_alloc_vector(t_data_type data_type, size_t size);
 char		*get_element(t_vector *vector, size_t index);
-void		add_to_vector(t_vector * vector, void *element, t_data_type data_type);
-void		resize(t_vector* vector, size_t new_capacity);
+bool		add_to_vector(t_vector * vector, void *element, t_data_type data_type);
+bool		resize(t_vector* vector, size_t new_capacity);
 void		print_vector(t_vector *vector);
 void		free_vector(t_vector* vector);
 

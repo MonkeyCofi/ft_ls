@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:05 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/29 14:09:59 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/07/03 12:38:29 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,12 @@ char	*build_path(t_ls *ls, const char *directory, char *entry)
 {
 	char	*path;
 	char	*temp;
+	size_t	dir_len;
 
-	if (!ft_strncmp(directory, "./", -1) || !ft_strncmp(directory, "../", -1) || !ft_strncmp(directory, "/", -1))
+	if (!directory || !entry)
+		return (NULL);
+	dir_len = ft_strlen(directory);
+	if (directory[dir_len - 1] == '/')
 		path = ft_strdup(directory);
 	else
 		path = ft_strjoin(directory, "/");
@@ -29,11 +33,11 @@ char	*build_path(t_ls *ls, const char *directory, char *entry)
 	path = ft_strjoin(path, entry);
 	if (!path)
 	{
+		free(temp);
 		return (NULL);
 	}
 	free(temp);
 	(void)ls;
-	(void)temp;
 	return (path);
 }
 

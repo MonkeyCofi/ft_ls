@@ -95,6 +95,8 @@ void	free_queue(t_queue *queue)
 	t_queue_node	*trav;
 	t_queue_node	*temp;
 
+	if (!queue)
+		return ;
 	trav = queue->front;
 	while (trav)
 	{
@@ -136,6 +138,8 @@ void	pop_front(t_queue *queue)
 {
 	t_queue_node	*temp;
 
+	if (!queue || !queue->front)
+		return ;
 	temp = queue->front;
 	queue->front = temp->next;
 	if (temp->alloc_data)
@@ -149,6 +153,8 @@ void	pop_back(t_queue *queue)
 	t_queue_node	*rear;
 	t_queue_node	*rear_prev;
 
+	if (!queue || !queue->rear)
+		return ;
 	rear = queue->rear;
 	rear_prev = rear->prev;
 	queue->rear = rear_prev;

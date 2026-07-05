@@ -68,9 +68,23 @@ void	initialize_dir_strs(t_ls *ls)
 			if (!str)
 				return ;
 			if (S_ISDIR(st.st_mode))
-				add_to_vector(ls->cli_args, str, STRING);
+			{
+				if (!add_to_vector(ls->cli_args, str, STRING))
+				{
+					free(str);
+					ls->error_code = 2;
+					return ;
+				}
+			}
 			else
-				add_to_vector(ls->files, str, STRING);
+			{
+				if (!add_to_vector(ls->files, str, STRING))
+				{
+					free(str);
+					ls->error_code = 2;
+					return ;
+				}
+			}
 		}
 		front = front->next;
 	}

@@ -99,12 +99,38 @@ static void merger_dirent(t_ls *ls, int start, int middle, int end)
 		{
 			// char *full_path = ft_strjoin(dir->directory_name, left_arr[i]);
 			char *full_path = build_path(NULL, ls->merge_dir->directory_name, left_arr[i]);
+			if (!full_path)
+			{
+				ls->error_code = 2;
+				free(left_arr);
+				free(right_arr);
+				return ;
+			}
 			if (lstat(full_path, &left) == -1)
-				exit(1);
+			{
+				free(full_path);
+				ls->error_code = 1;
+				free(left_arr);
+				free(right_arr);
+				return ;
+			}
 			free(full_path);
 			full_path = build_path(NULL, ls->merge_dir->directory_name, right_arr[j]);
+			if (!full_path)
+			{
+				ls->error_code = 2;
+				free(left_arr);
+				free(right_arr);
+				return ;
+			}
 			if (lstat(full_path, &right) == -1)
-				exit(1);
+			{
+				free(full_path);
+				ls->error_code = 1;
+				free(left_arr);
+				free(right_arr);
+				return ;
+			}
 			free(full_path);
 			if (left.st_mtime > right.st_mtime)
 				ls->merge_array[k] = left_arr[i++];

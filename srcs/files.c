@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 14:33:44 by pipolint          #+#    #+#             */
-/*   Updated: 2026/06/29 13:37:54 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/07/03 12:38:30 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,16 @@ t_dir_ptr *dir, struct winsize *w)
 	{
 		elem = (char *)get_element(entries, ls->trav_i);
 		path = build_path(ls, dir->directory_name, elem);
+		if (!path)
+		{
+			ls->error_code = 2;
+			return ;
+		}
+		if (!path)
+		{
+			ls->error_code = 2;
+			return ;
+		}
 		lstat(path, &st);
 		if (ls->list)
 			print_list(&st, dir);
@@ -83,12 +93,19 @@ t_vector *directories)
 
 	temp = ls->trav_i;
 	set_index(ls, entries->size);
+	ft_memset(&w, 0, sizeof(struct winsize));
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+	if (w.ws_col == 0)
+		w.ws_col = 80;
 	ls->multiple_columns = multiple_col_print(ls, entries, &w);
 	lstat(dir->directory_name, &st);
 	if (ls->list)
 		print_block_size(ls, entries, dir);
+	if (ls->error_code == 2)
+		return ;
 	loop_entries(ls, entries, dir, &w);
+	if (ls->error_code == 2)
+		return ;
 	if (ls->columns_written > 0)
 		ft_printf("\n");
 	ls->multiple_columns = false;
@@ -117,7 +134,12 @@ t_dir_ptr *current_dir)
 			ls->error_code = 2;
 			return ;
 		}
-		add_to_vector(dirent_entries, entry_str, STRING);
+		if (!add_to_vector(dirent_entries, entry_str, STRING))
+		{
+			free(entry_str);
+			ls->error_code = 2;
+			return ;
+		}
 		check_longest(ls, current_dir, entry);
 		entry = readdir(current_dir->directory);
 	}
@@ -134,7 +156,10 @@ void	print_files(t_ls *ls, t_vector *files)
 	if (!files || files->size == 0)
 		return ;
 	ft_memset(&file_info, 0, sizeof(t_dir_ptr));
+	ft_memset(&w, 0, sizeof(struct winsize));
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &w);
+	if (w.ws_col == 0)
+		w.ws_col = 80;
 	i = 0;
 	while (i < files->size)
 	{

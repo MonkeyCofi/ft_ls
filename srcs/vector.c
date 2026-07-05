@@ -56,7 +56,10 @@ t_vector	*alloc_vector(t_data_type data_type, size_t count, bool should_free)
 	vector->data = malloc(vector->capacity);
 	vector->member_size = memb_size;
 	if (!vector->data)
+	{
+		free(vector);
 		return (NULL);
+	}
 	ft_memset(vector->data, 0, vector->capacity);
 	return (vector);
 }
@@ -77,8 +80,9 @@ t_vector	non_alloc_vector(t_data_type data_type, size_t size)
 	vector.data = malloc(vector.capacity);
 	if (!vector.data)
 	{
-		vector.capacity = -1;
-		vector.size = -1;
+		vector.capacity = 0;
+		vector.size = 0;
+		vector.member_size = member_size;
 		return (vector);
 	}
 	ft_memset(vector.data, 0, vector.capacity);
@@ -95,10 +99,15 @@ t_vector	non_alloc_vector(t_data_type data_type, size_t size)
  * @return Nothinng
  * @e
 */
-void	add_to_vector(t_vector *vector, void *element, t_data_type data_type)
+bool	add_to_vector(t_vector *vector, void *element, t_data_type data_type)
 {
+	if (!vector || !vector->data)
+		return (false);
 	if (vector->member_size * vector->size >= vector->capacity)
-		resize(vector, vector->capacity * 2);
+	{
+		if (!resize(vector, vector->capacity * 2))
+			return (false);
+	}
 	if (data_type == STRING || data_type == POINTER || data_type == DIRECTORY)
 		ft_memmove(vector->data + (vector->size * vector->member_size), \
 &element, vector->member_size);
@@ -106,11 +115,7 @@ void	add_to_vector(t_vector *vector, void *element, t_data_type data_type)
 		ft_memmove(vector->data + (vector->size * vector->member_size), \
 element, vector->member_size);
 	vector->size++;
-	if (vector->capacity == (size_t)-1 || vector->size == (size_t)-1)
-	{
-		ft_printf("not working\n");
-		exit(1);
-	}
+	return (true);
 }
 
 /**
@@ -124,6 +129,8 @@ void	free_vector(t_vector *vector)
 	size_t	i;
 	char	*element;
 
+	if (!vector)
+		return ;
 	i = 0;
 	if (vector->should_free)
 	{

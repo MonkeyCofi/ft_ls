@@ -52,22 +52,21 @@ size_t	get_capacity(t_vector *vector)
  * @param new_capacity The new capacity
  * @return Nothing
 */
-void		resize(t_vector* vector, size_t new_capacity)
+bool		resize(t_vector* vector, size_t new_capacity)
 {
 	void	*new_data;
 
 	new_data = malloc(new_capacity);
 	if (!new_data)
 	{
-		vector->capacity = -1;
-		vector->size = -1;
-		return ;
+		return (false);
 	}
 	// ft_memmove(new_data, vector->data, vector->capacity);
 	memmove(new_data, vector->data, vector->capacity);
 	free(vector->data);
 	vector->data = new_data;
 	vector->capacity = new_capacity;
+	return (true);
 }
 
 void	print_vector(t_vector *vector)

@@ -24,10 +24,12 @@ void    parse_options(char *str, t_ls *ls)
 	{
 		if (str[i] == '-')
 		{
-			ls->exit_code = 2;
+			ls->error_code = 2;
+			ft_putstr_fd("Invalid option: -", 2);
+			write(2, &str[i], 1);
+			write(2, "\n", 1);
 			return ;
 		}
-			// return error
 		if (ft_strchr(OPTIONS, str[i]) && !ft_strchr(ls->options, str[i]))
 			ls->options[(*opt_count)++] = str[i];
 		if (str[i] == 'r')
@@ -77,9 +79,16 @@ void    parse_cli(char **args, int arg_count, t_ls *ls)
 			dup_str = ft_strdup(args[i]);
 			if (!dup_str)
 			{
-				
+				ls->error_code = 2;
+				return ;
 			}
 			new = create_queue_node(dup_str, true);
+			if (!new)
+			{
+				free(dup_str);
+				ls->error_code = 2;
+				return ;
+			}
 			enqueue_back(ls->directory_queue, new);
 		}
 		i++;
@@ -88,7 +97,18 @@ void    parse_cli(char **args, int arg_count, t_ls *ls)
 	{
 		ls->no_args = true;
 		dup_str = ft_strdup("./");
+		if (!dup_str)
+		{
+			ls->error_code = 2;
+			return ;
+		}
 		new = create_queue_node(dup_str, true);
+		if (!new)
+		{
+			free(dup_str);
+			ls->error_code = 2;
+			return ;
+		}
 		enqueue_back(ls->directory_queue, new);
 	}
 	if (ls->no_args == true && ft_strchr(ls->options, 'R'))

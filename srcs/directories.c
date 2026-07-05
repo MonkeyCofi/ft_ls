@@ -22,6 +22,7 @@ t_dir_ptr	*create_tdirptr(char *directory_name, DIR *dir_ptr)
 	ptr->directory_name = ft_strdup(directory_name);
 	if (!ptr->directory_name)
 	{
+		closedir(dir_ptr);
 		free(ptr);
 		return (NULL);
 	}
@@ -52,8 +53,23 @@ void	add_directory(t_ls *ls, char *path, t_vector *directory_vector)
 				return ;
 			}
 			dir_ptr = create_tdirptr(path, open_dir);
-			add_to_vector(directory_vector, dir_ptr, POINTER);
+			if (!dir_ptr)
+			{
+				ls->error_code = 2;
+				return ;
+			}
+			if (!add_to_vector(directory_vector, dir_ptr, POINTER))
+			{
+				free(dir_ptr->directory_name);
+				free(dir_ptr);
+				ls->error_code = 2;
+			}
 		}
+	}
+	else
+	{
+		print_error("cannot access", path, "");
+		ls->error_code = 1;
 	}
 }
 
@@ -70,12 +86,34 @@ void	add_arg_directories(t_ls *ls)
 	while (++i < ls->cli_args->size)
 	{
 		current_path = (char *)get_element(ls->cli_args, i);
-		stat(current_path, &st);
+		if (stat(current_path, &st) == -1)
+		{
+			print_error("cannot access", current_path, "");
+			ls->error_code = 1;
+			continue ;
+		}
 		if (S_ISDIR(st.st_mode))
 		{
 			ptr = opendir(current_path);
+			if (!ptr)
+			{
+				print_error("cannot open directory", current_path, "");
+				ls->error_code = 1;
+				continue ;
+			}
 			dir_ptr = create_tdirptr(current_path, ptr);
-			add_to_vector(ls->directories, dir_ptr, DIRECTORY);
+			if (!dir_ptr)
+			{
+				ls->error_code = 2;
+				return ;
+			}
+			if (!add_to_vector(ls->directories, dir_ptr, DIRECTORY))
+			{
+				free(dir_ptr->directory_name);
+				free(dir_ptr);
+				ls->error_code = 2;
+				return ;
+			}
 		}
 	}
 }
@@ -110,6 +148,9 @@ void	open_directories(t_ls *ls, t_vector **directories)
 			ft_putstr_fd(ptr->directory_name, STDERR_FILENO);
 			perror(" ");
 			ls->error_code = 1;
+			free_vector(entries);
+			if (rec_directories)
+				free_vector(rec_directories);
 			return ;
 		}
 		add_dirent_entries(ls, entries, ptr);
@@ -123,10 +164,31 @@ void	open_directories(t_ls *ls, t_vector **directories)
 		ls->merge_array = (char **)entries->data;
 		ls->merge_dir = ptr;
 		merge_dirent(ls, 0, entries->size);
+		if (ls->error_code == 2)
+		{
+			free_vector(entries);
+			free_vector(rec_directories);
+			closedir(ptr->directory);
+			return ;
+		}
 		if (ls->no_args == false)
 			ft_printf("%s:\n", ptr->directory_name);
 		rec_directories = alloc_vector(DIRECTORY, 1, true);
+		if (!rec_directories)
+		{
+			free_vector(entries);
+			closedir(ptr->directory);
+			ls->error_code = 2;
+			return ;
+		}
 		traverse_entries(ls, ptr, entries, rec_directories);
+		if (ls->error_code == 2)
+		{
+			free_vector(entries);
+			free_vector(rec_directories);
+			closedir(ptr->directory);
+			return ;
+		}
 		if (ls->no_args == false)
 			ft_printf("\n");
 		if (ls->recursive)
@@ -153,6 +215,11 @@ t_vector *directories, t_dir_ptr *dir)
 	{
 		elem = (char *)get_element(entries, i);
 		path = build_path(ls, dir->directory_name, elem);
+		if (!path)
+		{
+			ls->error_code = 2;
+			return ;
+		}
 		lstat(path, &st);
 		if (ls->recursive)
 		{
