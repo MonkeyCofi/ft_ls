@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 14:33:44 by pipolint          #+#    #+#             */
-/*   Updated: 2026/07/06 16:42:23 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/07/06 16:51:23 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	print_file(t_ls *ls, t_dir_ptr *dir, char *elem, struct winsize *w)
 {
 	if (ls->multiple_columns)
 	{
-		if ((dir->longest_filename + ft_strlen(elem) + ls->columns_written) > w->ws_col)
+		if ((dir->longest_filename + ft_strlen(elem) + ls->columns_written) >= (size_t)w->ws_col - 50)
 		{
 			ls->columns_written = 0;
 			ft_printf("\n");
