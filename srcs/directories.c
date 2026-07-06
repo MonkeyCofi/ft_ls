@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/22 13:45:53 by pipolint          #+#    #+#             */
-/*   Updated: 2026/07/05 15:35:08 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/07/06 16:43:50 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void	add_arg_directories(t_ls *ls)
 		if (stat(current_path, &st) == -1)
 		{
 			print_error("cannot access", current_path, "");
-			ls->error_code = 1;
+			ls->error_code = 2;
 			continue ;
 		}
 		if (S_ISDIR(st.st_mode))
@@ -98,21 +98,21 @@ void	add_arg_directories(t_ls *ls)
 			if (!ptr)
 			{
 				print_error("cannot open directory", current_path, "");
-				ls->error_code = 1;
+				ls->error_code = 2;
 				continue ;
 			}
 			dir_ptr = create_tdirptr(current_path, ptr);
 			if (!dir_ptr)
 			{
 				ls->error_code = 2;
-				return ;
+				continue ;
 			}
 			if (!add_to_vector(ls->directories, dir_ptr, DIRECTORY))
 			{
 				free(dir_ptr->directory_name);
 				free(dir_ptr);
 				ls->error_code = 2;
-				return ;
+				continue ;
 			}
 		}
 	}
@@ -220,14 +220,16 @@ t_vector *directories, t_dir_ptr *dir)
 			ls->error_code = 2;
 			return ;
 		}
-		lstat(path, &st);
-		if (ls->recursive)
+		if (lstat(path, &st) != -1)
 		{
-			if (S_ISDIR(st.st_mode))
+			if (ls->recursive)
 			{
-				if (ft_strncmp(elem, ".", -1) != 0 && \
-ft_strncmp(elem, "..", -1) != 0)
-					add_directory(ls, path, directories);
+				if (S_ISDIR(st.st_mode))
+				{
+					if (ft_strncmp(elem, ".", -1) != 0 && \
+	ft_strncmp(elem, "..", -1) != 0)
+						add_directory(ls, path, directories);
+				}
 			}
 		}
 		free(path);

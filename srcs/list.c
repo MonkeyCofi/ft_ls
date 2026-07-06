@@ -90,6 +90,13 @@ char is_directory(struct stat *st)
     return ('-');
 }
 
+static const char	*safe_name(char *name)
+{
+	if (!name)
+		return ("?");
+	return (name);
+}
+
 void print_list(struct stat *st, t_dir_ptr *ptr)
 {
     static const char *months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
@@ -115,8 +122,8 @@ void print_list(struct stat *st, t_dir_ptr *ptr)
     ft_printf("%c%c%c", list_char(&perms, S_IRGRP), list_char(&perms, S_IWGRP), list_char(&perms, S_IXGRP));
     ft_printf("%c%c%c ", list_char(&perms, S_IROTH), list_char(&perms, S_IWOTH), list_char(&perms, S_IXOTH));
     ft_printf("%*d ", ptr->longest_hlsize, st->st_nlink);
-    ft_printf("%*s ", ptr->longest_owner, pw->pw_name);
-    ft_printf("%*s ", ptr->longest_group, grp->gr_name);
+    ft_printf("%*s ", ptr->longest_owner, safe_name(pw ? pw->pw_name : NULL));
+    ft_printf("%*s ", ptr->longest_group, safe_name(grp ? grp->gr_name : NULL));
     ft_printf("%*d ", ptr->longest_filesize, st->st_size);
     ft_printf("%s %02d ", months[now_t.tm_mon], now_t.tm_mday);
     ft_printf("%02d:%02d ", now_t.tm_hour, now_t.tm_min);
@@ -139,10 +146,15 @@ void print_block_size(t_ls *ls, t_vector *entries, t_dir_ptr *curr_dir)
             ls->error_code = 2;
             return ;
         }
-        lstat(path, &st);
+        if (lstat(path, &st) == -1)
+        {
+            ls->error_code = 1;
+            free(path);
+            continue ;
+        }
         total += st.st_blocks / 2;
         free(path);
     }
-    ft_printf("total %ld\n", total);
+    ft_printf("total %zu\n", total);
     set_index(ls, entries->size);
 }

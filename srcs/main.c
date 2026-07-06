@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/08 18:05:41 by pipolint          #+#    #+#             */
-/*   Updated: 2026/07/05 15:35:08 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/07/06 16:13:56 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,29 +27,18 @@ void	free_ls(t_ls *ls)
 int main(int ac, char **av)
 {
 	t_ls			ls;
+	int				final_error_code;
 
 	initialize_ls(&ls);
 	parse_cli(av, ac, &ls);
-	if (ls.error_code == 2)
-	{
-		free_ls(&ls);
-		exit(ls.error_code);
-	}
 	initialize_dir_strs(&ls);
-	if (ls.error_code == 2)
-	{
-		free_ls(&ls);
-		exit(ls.error_code);
-	}
+	final_error_code = ls.error_code;
+	if (final_error_code == 2)
+		ls.error_code = 0;
 	if (ls.files->size > 1)
 		mergesort_string(ls.files->data, 0, ls.files->size);
 	mergesort_string(ls.cli_args->data, 0, ls.cli_args->size);
 	print_files(&ls, ls.files);
-	if (ls.error_code == 2)
-	{
-		free_ls(&ls);
-		exit(ls.error_code);
-	}
 	if (ls.files->size > 0 && ls.cli_args->size > 0)
 		ft_printf("\n");
 	ls.directories = alloc_vector(DIRECTORY, ls.cli_args->size, true);
@@ -59,13 +48,10 @@ int main(int ac, char **av)
 		exit(MAJOR_ERR);
 	}
 	add_arg_directories(&ls);
-	if (ls.error_code == 2)
-	{
-		free_ls(&ls);
-		exit(ls.error_code);
-	}
 	if (ls.directories->size > 0)
 		open_directories(&ls, &ls.directories);
 	free_ls(&ls);
-	exit(ls.error_code);
+	if (ls.error_code > final_error_code)
+		final_error_code = ls.error_code;
+	exit(final_error_code);
 }

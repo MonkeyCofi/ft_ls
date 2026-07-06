@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/24 20:20:50 by pipolint          #+#    #+#             */
-/*   Updated: 2026/07/05 15:35:05 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/07/06 15:54:17 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,20 +60,23 @@ void	initialize_dir_strs(t_ls *ls)
 			ft_putstr_fd((char *)front->data, STDERR_FILENO);
 			ft_putstr_fd(": ", STDERR_FILENO);
 			perror("");
-			ls->error_code = 1;
+			ls->error_code = 2;
 		}
 		else
 		{
 			str = ft_strdup(front->data);
 			if (!str)
-				return ;
+			{
+				ls->error_code = 2;
+				continue ;
+			}
 			if (S_ISDIR(st.st_mode))
 			{
 				if (!add_to_vector(ls->cli_args, str, STRING))
 				{
 					free(str);
 					ls->error_code = 2;
-					return ;
+					continue ;
 				}
 			}
 			else
@@ -82,15 +85,10 @@ void	initialize_dir_strs(t_ls *ls)
 				{
 					free(str);
 					ls->error_code = 2;
-					return ;
+					continue ;
 				}
 			}
 		}
 		front = front->next;
 	}
-}
-
-void    free_and_exit(t_ls *ls)
-{
-    (void)ls;
 }

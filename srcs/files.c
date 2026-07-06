@@ -6,7 +6,7 @@
 /*   By: pipolint <pipolint@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/23 14:33:44 by pipolint          #+#    #+#             */
-/*   Updated: 2026/07/05 15:52:04 by pipolint         ###   ########.fr       */
+/*   Updated: 2026/07/06 16:42:23 by pipolint         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,12 +74,16 @@ t_dir_ptr *dir, struct winsize *w)
 			ls->error_code = 2;
 			return ;
 		}
-		if (!path)
+		if (lstat(path, &st) == -1)
 		{
-			ls->error_code = 2;
-			return ;
+			ls->error_code = 1;
+			if (ls->list)
+				ft_printf("?????????? ? ? ? ? ? %s\n", elem);
+			else
+				print_file(ls, dir, elem, w);
+			free(path);
+			continue ;
 		}
-		lstat(path, &st);
 		if (ls->list)
 			print_list(&st, dir);
 		print_file(ls, dir, elem, w);
